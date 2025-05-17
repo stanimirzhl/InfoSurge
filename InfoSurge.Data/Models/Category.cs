@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using static InfoSurge.Data.Constants.DataConstants.CategoryConstants;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace InfoSurge.Data.Models
+{
+    public class Category
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(CategoryNameMaxLength)]
+        public string Name { get; set; }
+
+        [Required]
+        [MaxLength(CategoryDescriptionMaxLength)]
+        public string Description { get; set; }
+
+        public virtual ICollection<CategoryArticle> CategoryArticles { get; set; } = new HashSet<CategoryArticle>();
+    }
+}
