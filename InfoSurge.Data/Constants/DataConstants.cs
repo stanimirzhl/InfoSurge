@@ -17,6 +17,12 @@ namespace InfoSurge.Data.Constants
 
             public const int CategoryDescriptionMaxLength = 200;
             public const int CategoryDescriptionMinLength = 10;
+
+            public const string CategoryNameRequiredErrorMessage = "Името на категорията е задължително!";
+            public const string CategoryNameLengthMessage = "Дължината на името на категория трябва да е между {2} и {1} символа дълго!";
+
+            public const string CategoryDescriptionRequiredErrorMessage = "Описанието на категорията е задължително!";
+            public const string CategoryDescriptionLengthMessage = "Дължината на описанието на категория трябва да е между {2} и {1} символа дълго!";
         }
 
         public static class ArticleConstants

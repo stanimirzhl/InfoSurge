@@ -18,4 +18,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\InfoSurge.Core\InfoSurge.Core.csproj" />
+    <ProjectReference Include="..\InfoSurge.Data\InfoSurge.Data.csproj" />
+  </ItemGroup>
+
 </Project>
