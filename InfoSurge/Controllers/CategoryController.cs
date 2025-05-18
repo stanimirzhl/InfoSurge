@@ -45,13 +45,13 @@ namespace InfoSurge.Controllers
                 return View(formModel);
             }
 
-            CategoryDto brandServiceModel = new CategoryDto
+            CategoryDto categoryDto = new CategoryDto
             {
                 Name = formModel.Name,
                 Description = formModel.Description
             };
 
-            await categoryService.AddAsync(brandServiceModel);
+            await categoryService.AddAsync(categoryDto);
             return RedirectToAction("All");
         }
 

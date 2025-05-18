@@ -1,4 +1,5 @@
 ﻿using InfoSurge.Core.DTOs.Category;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,6 @@ namespace InfoSurge.Core.Interfaces
         Task EditAsync(CategoryDto categoryDto);
         Task<CategoryDto> GetByIdAsync(int id);
         Task DeleteAsync(int id);
+        Task<List<SelectListItem>> GetCategoriesIntoSelectList();
     }
 }

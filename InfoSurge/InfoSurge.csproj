@@ -23,4 +23,9 @@
     <ProjectReference Include="..\InfoSurge.Data\InfoSurge.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\ArticleImageFolders\" />
+    <Folder Include="wwwroot\TempImages\" />
+  </ItemGroup>
+
 </Project>

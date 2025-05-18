@@ -1,6 +1,8 @@
 ﻿using InfoSurge.Core.DTOs.Category;
+using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InfoSurge.Core.Interfaces
+namespace InfoSurge.Core.Implementations
 {
     public class CategoryService : ICategoryService
     {
@@ -77,7 +79,18 @@ namespace InfoSurge.Core.Interfaces
                 Name = category.Name,
                 Description = category.Description
             };
+        }
 
+        public async Task<List<SelectListItem>> GetCategoriesIntoSelectList()
+        {
+            return repository
+                .AllAsReadOnly()
+                .Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Name
+                })
+                .ToList();
         }
     }
 }

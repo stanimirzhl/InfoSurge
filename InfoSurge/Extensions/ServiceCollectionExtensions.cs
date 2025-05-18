@@ -1,4 +1,5 @@
-﻿using InfoSurge.Core.Interfaces;
+﻿using InfoSurge.Core.Implementations;
+using InfoSurge.Core.Interfaces;
 using InfoSurge.Data;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
@@ -13,6 +14,10 @@ namespace InfoSurge.Extensions
         public static IServiceCollection AddCoreServices(this IServiceCollection services)
         {
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IArticleService, ArticleService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IArticleImageService, ArticleImageService>();
+            services.AddScoped<ICategoryArticleService, CategoryArticleService>();
 
             services.AddMvc(options =>
                 options

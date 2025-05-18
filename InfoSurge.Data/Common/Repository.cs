@@ -44,6 +44,7 @@ namespace InfoSurge.Data.Common
         {
             return await dbSet.FindAsync(id);
         }
+
         public async Task DeleteAsync(object id)
         {
             TEntity? entity = await GetByIdAsync(id);

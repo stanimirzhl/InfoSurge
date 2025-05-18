@@ -36,6 +36,17 @@ namespace InfoSurge.Data.Constants
 
             public const int ArticleContentMaxLength = 5000;
             public const int ArticleContentMinLength = 100;
+
+            public const string ArticleTitleRequiredErrorMessage = "Заглавието на новината е задължително!";
+            public const string ArticleTitleLengthMessage = "Дължината на заглавието на новината трябва да е между {2} и {1} символа дълго!";
+
+            public const string ArticleIntroductionRequiredErrorMessage = "Въведението на новината е задължително!";
+            public const string ArticleIntroductionLengthMessage = "Дължината на въведението на новината трябва да е между {2} и {1} символа дълго!";
+
+            public const string ArticleContentRequiredErrorMessage = "Въведението на новината е задължително!";
+            public const string ArticleContentLengthMessage = "Дължината на въведението на новината трябва да е между {2} и {1} символа дълго!";
+
+            public const string ArticleMainImageErrorMessage = "Основното изображение е задължително!";
         }
 
         public static class UserConstants
