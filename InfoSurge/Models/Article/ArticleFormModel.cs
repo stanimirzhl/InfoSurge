@@ -23,8 +23,7 @@ namespace InfoSurge.Models.Article
         [StringLength(ArticleContentMaxLength, MinimumLength = ArticleContentMinLength, ErrorMessage = ArticleContentLengthMessage)]
         public string Content { get; set; }
 
-        [Required(ErrorMessage = ArticleMainImageErrorMessage)]
-        public IFormFile MainImage { get; set; }
+        public IFormFile? MainImage { get; set; }
 
         public List<IFormFile> AdditionalImages { get; set; } = new List<IFormFile>();
 

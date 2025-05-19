@@ -1,6 +1,7 @@
 ﻿using InfoSurge.Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using System;
@@ -140,7 +141,7 @@ namespace InfoSurge.Core.Implementations
                     await mainImage.CopyToAsync(stream);
                 }
 
-                mainImageNewPath = $"/{Path.Combine("ArticleImageFolders", "MainImage", fileName).Replace("\\", "/")}";
+                mainImageNewPath = $"/{Path.Combine("ArticleImageFolders",$"Article-{articleId}-Images", "MainImage", fileName).Replace("\\", "/")}";
             }
             string additionalImagesFolder = Path.Combine(articleFolder, "AdditionalImages");
 
@@ -162,7 +163,7 @@ namespace InfoSurge.Core.Implementations
                     {
                         await image.CopyToAsync(stream);
                     }
-                    additionalImagesPath.Add($"/{Path.Combine("ArticleImageFolders", "AdditionalImages", imageName).Replace("\\", "/")}");
+                    additionalImagesPath.Add($"/{Path.Combine("ArticleImageFolders", $"Article-{articleId}-Images", "AdditionalImages", imageName).Replace("\\", "/")}");
                 }
             }
 
@@ -193,6 +194,18 @@ namespace InfoSurge.Core.Implementations
                         File.Delete(additionalImageFolder);
                     }
                 }
+            }
+        }
+
+        public async Task DeleteImagesFolder(int articleId)
+        {
+            string imagesFolderPath = Path.Combine(environment.WebRootPath, "ArticleImageFolders");
+
+            string articleFolder = Path.Combine(imagesFolderPath, $"Article-{articleId}-Images");
+
+            if (Directory.Exists(articleFolder))
+            {
+                Directory.Delete(articleFolder, true);
             }
         }
     }

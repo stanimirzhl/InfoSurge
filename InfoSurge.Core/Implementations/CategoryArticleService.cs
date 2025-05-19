@@ -40,5 +40,14 @@ namespace InfoSurge.Core.Implementations
                 .Select(x => x.CategoryId)
                 .ToList();
         }
+
+        public async Task DeleteAsync(List<int> categoryIds)
+        {
+            IQueryable<CategoryArticle> categoryArticles = repository
+                .All()
+                .Where(x => categoryIds.Contains(x.CategoryId));
+
+            await repository.RemoveRange(categoryArticles);
+        }
     }
 }

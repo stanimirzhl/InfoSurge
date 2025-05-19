@@ -45,12 +45,35 @@ namespace InfoSurge.Core.Implementations
                 x.ImgUrl = x.ImgUrl.Replace("TempImages", "ArticleImageFolders");
             });
 
+            await articleImages.ForEachAsync(x =>
+            {
+                if (!string.IsNullOrEmpty(x.ImgUrl))
+                {
+                    string[] parts = x.ImgUrl.Split('/');
+                    List<string> updatedParts = new List<string>();
+
+                    foreach (string part in parts)
+                    {
+                        if (!string.IsNullOrWhiteSpace(part))
+                        {
+                            updatedParts.Add(part);
+                            if (part == "ArticleImageFolders")
+                            {
+                                updatedParts.Add($"Article-{articleId}-Images");
+                            }
+                        }
+                    }
+
+                    x.ImgUrl = "/" + string.Join("/", updatedParts);
+                }
+            });
+
             await repository.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(List<int> oldImagesIds)
         {
-            IQueryable<ArticleImage> articleImages =  repository
+            IQueryable<ArticleImage> articleImages = repository
                 .All()
                 .Where(x => oldImagesIds.Contains(x.Id));
 
@@ -67,6 +90,17 @@ namespace InfoSurge.Core.Implementations
                     Id = x.Id,
                     ImagePath = x.ImgUrl
                 })
+                .ToListAsync();
+        }
+
+        public async Task<List<string>> GetImagePathsByTheirIds(List<int> additionalImageIds)
+        {
+            IQueryable<ArticleImage> articleImages = repository
+                .AllAsReadOnly()
+                .Where(x => additionalImageIds.Contains(x.Id));
+
+            return await articleImages
+                .Select(x => x.ImgUrl)
                 .ToListAsync();
         }
     }

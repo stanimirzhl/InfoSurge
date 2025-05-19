@@ -10,5 +10,6 @@ namespace InfoSurge.Core.Interfaces
     {
         Task AddAsync(int id, List<int> categoryIds);
         Task<List<int>> GetSelectedCategories(int articleId);
+        Task DeleteAsync(List<int> categoryIds);
     }
 }

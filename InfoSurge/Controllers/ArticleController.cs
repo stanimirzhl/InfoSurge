@@ -1,8 +1,10 @@
 ﻿using InfoSurge.Core;
 using InfoSurge.Core.DTOs.Article;
+using InfoSurge.Core.DTOs.Category;
 using InfoSurge.Core.Implementations;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Article;
+using InfoSurge.Models.Category;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
 using System.Security.Claims;
@@ -46,6 +48,13 @@ namespace InfoSurge.Controllers
         {
             if (!ModelState.IsValid)
             {
+                formModel.CategoryIds = await categoryService.GetCategoriesIntoSelectList();
+                formModel.MainImageUrl = null;
+                return View(formModel);
+            }
+            if (formModel.MainImage is null || formModel.MainImage.Length == 0)
+            {
+                ModelState.AddModelError("MainImage", "Основното изображение е задължително!");
                 formModel.CategoryIds = await categoryService.GetCategoriesIntoSelectList();
                 formModel.MainImageUrl = null;
                 return View(formModel);
@@ -130,7 +139,7 @@ namespace InfoSurge.Controllers
                     Id = id,
                     Title = formModel.Title,
                     Introduction = formModel.Introduction,
-                    Content = formModel.Content
+                    Content = formModel.Content,
                 };
 
                 if (formModel.MainImage is not null && formModel.MainImage.Length > 0)
@@ -154,8 +163,34 @@ namespace InfoSurge.Controllers
 
                     await articleImageService.AddAsync(id, additionalImages);
 
-                    await fileService.DeleteImages(id, existingDto.AdditionalImages);
+                    if (formModel.ImagesIdsToDelete.Count > 0)
+                    {
+                        List<string> ImagesToRemove = await articleImageService.GetImagePathsByTheirIds(formModel.ImagesIdsToDelete);
+
+                        await fileService.DeleteImages(id, ImagesToRemove);
+
+                        await articleImageService.DeleteAsync(formModel.ImagesIdsToDelete);
+                    }
+
                 }
+                else if (formModel.ImagesIdsToDelete.Count > 0)
+                {
+                    List<string> ImagesToRemove = await articleImageService.GetImagePathsByTheirIds(formModel.ImagesIdsToDelete);
+
+                    await fileService.DeleteImages(id, ImagesToRemove);
+
+                    await articleImageService.DeleteAsync(formModel.ImagesIdsToDelete);
+                }
+
+                List<int> originalCategoryIds = await categoryArticleService.GetSelectedCategories(id);
+
+                List<int> userChosenIds = formModel.SelectedCategoryIds;
+
+                List<int> categoriesToAdd = userChosenIds.Except(originalCategoryIds).ToList();
+                List<int> categoriesToRemove = originalCategoryIds.Except(userChosenIds).ToList();
+
+                await categoryArticleService.AddAsync(id, categoriesToAdd);
+                await categoryArticleService.DeleteAsync(categoriesToRemove);
 
                 await articleService.EditAsync(articleDto);
 
@@ -166,6 +201,55 @@ namespace InfoSurge.Controllers
                 return NotFound();
             }
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                ArticleDto articleDto = await articleService.GetByIdAsync(id);
+
+                ArticleDeleteVM articleDeleteVM = new ArticleDeleteVM()
+                {
+                    Id = articleDto.Id,
+                    Title = articleDto.Title,
+                    Introduction = articleDto.Introduction,
+                    Content = articleDto.Content,
+                    MainImageUrl = articleDto.MainImageUrl,
+                    AdditionalImages = await articleImageService.GetAllImagePathsById(id),
+                    SelectedCategoryIds = await categoryArticleService.GetSelectedCategories(id),
+                    CategoryIds = await categoryService.GetCategoriesIntoSelectList(),
+                };
+
+                return View(articleDeleteVM);
+            }
+            catch (NoEntityException ex)
+            {
+                return NotFound();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, ArticleDeleteVM articleDeleteVM)
+        {
+            if (id != articleDeleteVM.Id)
+            {
+                return BadRequest("Invalid request");
+            }
+            try
+            {
+                ArticleDto articleDto = await articleService.GetByIdAsync(id);
+
+                await articleService.DeleteAsync(id);
+
+                await fileService.DeleteImagesFolder(id);
+
+                return RedirectToAction("All");
+            }
+            catch (NoEntityException ex)
+            {
+                return NotFound();
+            }
         }
     }
 }
