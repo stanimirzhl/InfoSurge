@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using InfoSurge.Core.DTOs.ArticleImage;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.ArticleConstants;
 
@@ -27,8 +28,14 @@ namespace InfoSurge.Models.Article
 
         public List<IFormFile> AdditionalImages { get; set; } = new List<IFormFile>();
 
+        public string? MainImageUrl { get; set; }
+
         public List<SelectListItem> CategoryIds { get; set; } = new List<SelectListItem>();
 
         public List<int> SelectedCategoryIds { get; set; } = new List<int>();
+
+        public List<int> ImagesIdsToDelete { get; set; } = new List<int>();
+
+        public List<ArticleImageDto> AdditionalImagesPaths { get; set; } = new List<ArticleImageDto>();
     }
 }

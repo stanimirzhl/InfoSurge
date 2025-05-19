@@ -9,6 +9,8 @@ builder.Services.AddIdentityServices();
 
 var app = builder.Build();
 
+app.ApplyDatabaseMigrations();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

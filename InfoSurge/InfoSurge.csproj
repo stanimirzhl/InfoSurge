@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>736502a8-9e54-4f88-95e2-ca60e11e5656</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,11 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\InfoSurge.Core\InfoSurge.Core.csproj" />
     <ProjectReference Include="..\InfoSurge.Data\InfoSurge.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\ArticleImageFolders\" />
-    <Folder Include="wwwroot\TempImages\" />
   </ItemGroup>
 
 </Project>

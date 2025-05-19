@@ -6,6 +6,7 @@ using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace InfoSurge.Extensions
 {
@@ -54,6 +55,12 @@ namespace InfoSurge.Extensions
             .AddEntityFrameworkStores<InfoSurgeDbContext>();
 
             return services;
+        }
+        public static void ApplyDatabaseMigrations(this IHost app)
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<InfoSurgeDbContext>();
+            db.Database.Migrate();
         }
     }
 }

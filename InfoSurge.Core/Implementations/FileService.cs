@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace InfoSurge.Core.Implementations
 {
@@ -23,6 +24,11 @@ namespace InfoSurge.Core.Implementations
         public async Task<List<string>> GetAdditionalImagesPath(IEnumerable<IFormFile> images)
         {
             string tempImageFolder = Path.Combine(environment.WebRootPath, "TempImages");
+
+            if (!Directory.Exists(tempImageFolder))
+            {
+                Directory.CreateDirectory(tempImageFolder);
+            }
 
             string additionalImagesTempDirectory = Path.Combine(tempImageFolder, "AdditionalImages");
 
@@ -44,8 +50,8 @@ namespace InfoSurge.Core.Implementations
                     await image.CopyToAsync(stream);
                 }
 
-                string relativePath = Path.Combine("TempImages", "AdditionalImages", fileName);
-                additionalImagesPath.Add("\\" + relativePath);
+                string relativePath = Path.Combine("TempImages", "AdditionalImages", fileName).Replace("\\", "/");
+                additionalImagesPath.Add("/" + relativePath);
             }
 
             return additionalImagesPath;
@@ -54,6 +60,11 @@ namespace InfoSurge.Core.Implementations
         public async Task<string> GetMainImagePath(IFormFile mainImage)
         {
             string tempImageFolder = Path.Combine(environment.WebRootPath, "TempImages");
+
+            if (!Directory.Exists(tempImageFolder))
+            {
+                Directory.CreateDirectory(tempImageFolder);
+            }
 
             string mainImageTempDirectory = Path.Combine(tempImageFolder, "MainImage");
 
@@ -71,14 +82,19 @@ namespace InfoSurge.Core.Implementations
                 await mainImage.CopyToAsync(stream);
             }
 
-            string relativePath = Path.Combine("TempImages", "MainImage", fileName);
+            string relativePath = Path.Combine("TempImages", "MainImage", fileName).Replace("\\", "/");
 
-            return $"\\{relativePath}";
+            return $"/{relativePath}";
         }
 
         public async Task MoveImagesToArticleFolder(int articleId)
         {
             string imagesFolderPath = Path.Combine(environment.WebRootPath, "ArticleImageFolders");
+
+            if (!Directory.Exists(imagesFolderPath))
+            {
+                Directory.CreateDirectory(imagesFolderPath);
+            }
 
             string tempImageFolderPath = Path.Combine(environment.WebRootPath, "TempImages");
             string tempMainImageFolderPath = Path.Combine(tempImageFolderPath, "MainImage");
@@ -105,5 +121,79 @@ namespace InfoSurge.Core.Implementations
             }
         }
 
+        public async Task<(string, List<string>)> ReplaceMainImageAndAdditionals(int articleId, List<IFormFile> additionalImages, IFormFile? mainImage = null)
+        {
+            string imagesFolderPath = Path.Combine(environment.WebRootPath, "ArticleImageFolders");
+
+            string articleFolder = Path.Combine(imagesFolderPath, $"Article-{articleId}-Images");
+
+            string mainImageNewPath = string.Empty;
+            if (mainImage is not null)
+            {
+                string mainImageFolder = Path.Combine(articleFolder, "MainImage");
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(mainImage.FileName);
+
+                string mainImagePath = Path.Combine(mainImageFolder, fileName);
+
+                using (FileStream stream = new FileStream(mainImagePath, FileMode.Create))
+                {
+                    await mainImage.CopyToAsync(stream);
+                }
+
+                mainImageNewPath = $"/{Path.Combine("ArticleImageFolders", "MainImage", fileName).Replace("\\", "/")}";
+            }
+            string additionalImagesFolder = Path.Combine(articleFolder, "AdditionalImages");
+
+            List<string> additionalImagesPath = new List<string>();
+            if (additionalImages.Count > 0)
+            {
+                if (!Directory.Exists(additionalImagesFolder))
+                {
+                    Directory.CreateDirectory(additionalImagesFolder);
+                }
+
+                foreach (var image in additionalImages)
+                {
+                    string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+
+                    string tempFilePath = Path.Combine(additionalImagesFolder, imageName);
+
+                    using (FileStream stream = new FileStream(tempFilePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+                    additionalImagesPath.Add($"/{Path.Combine("ArticleImageFolders", "AdditionalImages", imageName).Replace("\\", "/")}");
+                }
+            }
+
+            return (mainImageNewPath, additionalImagesPath);
+        }
+
+        public async Task DeleteImages(int articleId, List<string> oldAdditionalImages, string oldMainImage = null)
+        {
+
+            if(oldMainImage is not null)
+            {
+                string mainImageFolder = $"{environment.WebRootPath}{oldMainImage}";
+
+                if (File.Exists(mainImageFolder))
+                {
+                    File.Delete(mainImageFolder);
+                }
+            }
+
+            if (oldAdditionalImages.Count > 0) 
+            {
+                foreach (string image in oldAdditionalImages)
+                {
+                    string additionalImageFolder = $"{environment.WebRootPath}{image}";
+
+                    if (File.Exists(additionalImageFolder))
+                    {
+                        File.Delete(additionalImageFolder);
+                    }
+                }
+            }
+        }
     }
 }

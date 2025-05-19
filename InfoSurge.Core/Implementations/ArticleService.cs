@@ -1,4 +1,5 @@
 ﻿using InfoSurge.Core.DTOs.Article;
+using InfoSurge.Core.DTOs.Category;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
@@ -39,6 +40,32 @@ namespace InfoSurge.Core.Implementations
             Article article = await repository.GetByIdAsync(articleId);
 
             article.MainImageUrl = article.MainImageUrl.Replace("TempImages", "ArticleImageFolders");
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task<ArticleDto> GetByIdAsync(int id)
+        {
+            Article article = await repository.GetByIdAsync(id) 
+                ?? throw new NoEntityException($"Новина с Id {id} не е намерена!");
+
+            return new ArticleDto
+            {
+                Title = article.Title,
+                Introduction = article.Introduction,
+                Content = article.Content,
+                MainImageUrl = article.MainImageUrl
+            };
+        }
+
+        public async Task EditAsync(ArticleDto articleDto)
+        {
+            Article article = await repository.GetByIdAsync(articleDto.Id)
+                ?? throw new NoEntityException($"Новина с Id {articleDto.Id} не е намерена!");
+
+            article.Title = articleDto.Title;
+            article.Introduction = articleDto.Introduction;
+            article.Content = articleDto.Content;
 
             await repository.SaveChangesAsync();
         }

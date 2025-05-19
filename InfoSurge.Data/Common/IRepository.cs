@@ -19,5 +19,7 @@ namespace InfoSurge.Data.Common
         Task<TEntity?> GetByIdAsync(object id);
 
         Task DeleteAsync(object id);
+
+        Task RemoveRange(IEnumerable<TEntity> entities);
     }
 }

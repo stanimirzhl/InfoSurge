@@ -55,5 +55,12 @@ namespace InfoSurge.Data.Common
                 await this.SaveChangesAsync();
             }
         }
+
+        public async Task RemoveRange(IEnumerable<TEntity> entities)
+        {
+            dbSet.RemoveRange(entities);
+
+            await this.SaveChangesAsync();
+        }
     }
 }

@@ -31,5 +31,14 @@ namespace InfoSurge.Core.Implementations
             }
             await repository.SaveChangesAsync();
         }
+
+        public async Task<List<int>> GetSelectedCategories(int articleId)
+        {
+            return repository
+                .AllAsReadOnly()
+                .Where(x => x.ArticleId == articleId)
+                .Select(x => x.CategoryId)
+                .ToList();
+        }
     }
 }

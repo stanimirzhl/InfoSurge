@@ -1,4 +1,5 @@
-﻿using InfoSurge.Core.Interfaces;
+﻿using InfoSurge.Core.DTOs.ArticleImage;
+using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,28 @@ namespace InfoSurge.Core.Implementations
             });
 
             await repository.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(List<int> oldImagesIds)
+        {
+            IQueryable<ArticleImage> articleImages =  repository
+                .All()
+                .Where(x => oldImagesIds.Contains(x.Id));
+
+             await repository.RemoveRange(articleImages);
+        }
+
+        public async Task<List<ArticleImageDto>> GetAllImagePathsById(int articleId)
+        {
+            return await repository
+                .AllAsReadOnly()
+                .Where(x => x.ArticleId == articleId)
+                .Select(x => new ArticleImageDto 
+                {
+                    Id = x.Id,
+                    ImagePath = x.ImgUrl
+                })
+                .ToListAsync();
         }
     }
 }

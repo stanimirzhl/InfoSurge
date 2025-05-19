@@ -10,6 +10,8 @@ namespace InfoSurge.Core.Interfaces
     public interface IArticleService
     {
         Task<int> AddAsync(ArticleDto articleDto);
+        Task EditAsync(ArticleDto articleDto);
+        Task<ArticleDto> GetByIdAsync(int id);
         Task ChangeDirectory(int articleId);
     }
 }
