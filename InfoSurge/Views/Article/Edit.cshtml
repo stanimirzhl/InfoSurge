@@ -89,6 +89,7 @@
     <partial name="_ValidationScriptsPartial" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
     <script>
         function previewImage(event, previewElementId) {
             var reader = new FileReader();
@@ -130,6 +131,11 @@
                 placeholder: 'Изберете категории',
                 allowClear: true
             });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            autosize(document.querySelectorAll('textarea'));
         });
     </script>
 }

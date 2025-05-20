@@ -26,11 +26,17 @@
                 </div>
                 <button asp-controller="Category" asp-action="Add" class="btn btn-primary">Създай</button>
                 <a asp-controller="Category" asp-action="All" class="btn btn-secondary">Върни се обратно</a>
-            </div>            
+            </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            autosize(document.querySelectorAll("textarea"));
+        });
+    </script>
 }
