@@ -3,6 +3,7 @@ using InfoSurge.Core.DTOs.Category;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -101,6 +102,48 @@ namespace InfoSurge.Core.Implementations
 
             await repository.DeleteAsync(article.Id);
             await repository.SaveChangesAsync();
+        }
+
+        public Task<PagingModel<ArticleDto>> GetAllPagedArticles(string? searchTerm, int pageIndex, int pageSize, int? categoryId)
+        {
+            IQueryable<Article> articles = repository
+                .AllAsReadOnly()
+                .Include(x => x.Author)
+                .Include(x => x.ArticleImages)
+                .Include(x => x.CategoryArticles)
+                    .ThenInclude(x => x.Category)
+                .OrderByDescending(x => x.PublishDate);
+
+            if (categoryId.HasValue && categoryId > 0)
+            {
+                articles = articles.Where(x => x.CategoryArticles.Any(x => x.CategoryId == categoryId));
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                articles = articles.Where(x => x.Title.ToLower().Contains(searchTerm.ToLower())
+                    || x.Introduction.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            IQueryable<ArticleDto> allMappedArticles = articles
+                .Select(x => new ArticleDto
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Introduction = x.Introduction,
+                    Content = x.Content,
+                    MainImageUrl = x.MainImageUrl,
+                    PublishDate = x.PublishDate,
+                    AuthorName = x.Author == null ? "Изтрит потребител" : (x.Author.FirstName + " " + x.Author.LastName),
+                    AdditionalImages = x.ArticleImages
+                    .Select(i => i.ImgUrl)
+                    .ToList(),
+                    CategoryNames = x.CategoryArticles
+                        .Select(c => c.Category.Name)
+                        .ToList()
+                });
+
+            return PagingModel<ArticleDto>.CreateAsync(allMappedArticles, pageIndex, pageSize);
         }
     }
 }

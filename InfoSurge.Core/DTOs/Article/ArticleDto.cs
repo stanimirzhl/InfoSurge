@@ -18,9 +18,13 @@ namespace InfoSurge.Core.DTOs.Article
 
         public string? AuthorId { get; set; }
 
+        public string? AuthorName { get; set; }
+
         public string MainImageUrl { get; set; }
 
         public List<string> AdditionalImages { get; set; } = new List<string>();
+
+        public List<string> CategoryNames { get; set; } = new List<string>();
 
         public DateTime PublishDate { get; set; }
     }

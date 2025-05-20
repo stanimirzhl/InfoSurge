@@ -20,7 +20,7 @@ namespace InfoSurge.Core.Implementations
 
         public async Task AddAsync(int id, List<int> categoryIds)
         {
-            foreach (var categoryId in categoryIds)
+            foreach (int categoryId in categoryIds)
             {
                 CategoryArticle categoryArticle = new CategoryArticle()
                 {

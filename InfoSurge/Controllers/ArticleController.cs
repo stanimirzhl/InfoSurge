@@ -91,7 +91,7 @@ namespace InfoSurge.Controllers
             await articleService.ChangeDirectory(articleId);
             await articleImageService.ChangeDirectory(articleId);
 
-            return RedirectToAction("All");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -194,7 +194,7 @@ namespace InfoSurge.Controllers
 
                 await articleService.EditAsync(articleDto);
 
-                return RedirectToAction("All");
+                return RedirectToAction("Index", "Home");
             }
             catch (NoEntityException ex)
             {
@@ -244,7 +244,7 @@ namespace InfoSurge.Controllers
 
                 await fileService.DeleteImagesFolder(id);
 
-                return RedirectToAction("All");
+                return RedirectToAction("Index", "Home");
             }
             catch (NoEntityException ex)
             {

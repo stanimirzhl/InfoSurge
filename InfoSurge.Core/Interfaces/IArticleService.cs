@@ -9,6 +9,7 @@ namespace InfoSurge.Core.Interfaces
 {
     public interface IArticleService
     {
+        Task<PagingModel<ArticleDto>> GetAllPagedArticles(string? searchTerm, int pageIndex, int pageSize, int? categoryId);
         Task<int> AddAsync(ArticleDto articleDto);
         Task EditAsync(ArticleDto articleDto);
         Task<ArticleDto> GetByIdAsync(int id);

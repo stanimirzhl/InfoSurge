@@ -23,7 +23,7 @@ namespace InfoSurge.Core.Implementations
 
         public async Task AddAsync(int id, List<string> imagePaths)
         {
-            foreach (var imagePath in imagePaths)
+            foreach (string imagePath in imagePaths)
             {
                 ArticleImage articleImage = new ArticleImage()
                 {

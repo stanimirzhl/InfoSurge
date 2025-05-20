@@ -40,7 +40,7 @@ namespace InfoSurge.Core.Implementations
 
             List<string> additionalImagesPath = new List<string>();
 
-            foreach (var image in images)
+            foreach (IFormFile image in images)
             {
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
 
@@ -153,7 +153,7 @@ namespace InfoSurge.Core.Implementations
                     Directory.CreateDirectory(additionalImagesFolder);
                 }
 
-                foreach (var image in additionalImages)
+                foreach (IFormFile image in additionalImages)
                 {
                     string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
 

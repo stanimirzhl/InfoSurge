@@ -3,6 +3,7 @@ using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -83,14 +84,14 @@ namespace InfoSurge.Core.Implementations
 
         public async Task<List<SelectListItem>> GetCategoriesIntoSelectList()
         {
-            return repository
+            return await repository
                 .AllAsReadOnly()
                 .Select(x => new SelectListItem
                 {
                     Value = x.Id.ToString(),
                     Text = x.Name
                 })
-                .ToList();
+                .ToListAsync();
         }
     }
 }
