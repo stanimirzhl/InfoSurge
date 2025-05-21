@@ -77,6 +77,12 @@ namespace InfoSurge.Data.Constants
                 Pending = 0,
                 Approved = 1
             }
+
+            public const string CommentTitleRequiredErrorMessage = "Заглавието на коментара е задължително!";
+            public const string CommentTitleLengthMessage = "Дължината на заглавието на коментара трябва да е между {2} и {1} символа дълго!";
+
+            public const string CommentContentRequiredErrorMessage = "Съдържанието на коментара е задължително!";
+            public const string CommentContentLengthMessage = "Дължината на съдържанието на коментара трябва да е между {2} и {1} символа дълго!";
         }
     }
 }

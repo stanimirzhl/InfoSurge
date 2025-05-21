@@ -1,0 +1,51 @@
+﻿@using InfoSurge.Core
+@using InfoSurge.Models.Comment
+@model PagingModel<CommentVM>
+
+@if (Model.TotalCount > 1)
+{
+    foreach (CommentVM comment in Model.Items)
+    {
+        <div class="card mb-2">
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Автор:</strong> @comment.AuthorName
+                </p>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Публикуван на: @comment.CreatedOn
+                </h6>
+                <h6 class="card-text"><strong>@comment.Title</strong></h6>
+                <p class="card-text">@comment.Content</p>
+            </div>
+        </div>
+    }
+    @if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                    <a class="page-link" href="?pageIndex=@(Model.PageIndex - 1)">Назад</a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                        <a class="page-link" href="?pageIndex=@i">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                    <a class="page-link" href="?pageIndex=@(Model.PageIndex + 1)">Напред</a>
+                </li>
+            </ul>
+        </nav>
+    }
+}
+else
+{
+    <div class="col-12">
+        <div class="alert alert-warning text-center">
+            Няма коментари.
+        </div>
+    </div>
+}

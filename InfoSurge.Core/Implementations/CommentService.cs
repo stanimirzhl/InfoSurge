@@ -1,11 +1,15 @@
-﻿using InfoSurge.Core.Interfaces;
+﻿using InfoSurge.Core.DTOs.Comment;
+using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
+using static InfoSurge.Data.Constants.DataConstants.CommentConstants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace InfoSurge.Core.Implementations
 {
@@ -18,6 +22,77 @@ namespace InfoSurge.Core.Implementations
             this.repository = repository;
         }
 
+        public async Task AddAsync(int articleId, CommentDto commentDto)
+        {
+            Comment comment = new Comment()
+            {
+                Title = commentDto.Title,
+                Content = commentDto.Content,
+                ArticleId = articleId,
+                AuthorId = commentDto.AuthorId,
+                Status = CommentStatus.Pending
+            };
 
+            await repository.AddAsync(comment);
+        }
+
+        public async Task Approve(int commentId)
+        {
+            Comment comment = await repository.GetByIdAsync(commentId) ?? throw new NoEntityException($"Коментар с Id {commentId} не съществува!");
+
+            comment.Status = CommentStatus.Approved;
+
+            await repository.SaveChangesAsync();
+        }
+
+        public async Task Remove(int commentId)
+        {
+            Comment comment = await repository.GetByIdAsync(commentId) ?? throw new NoEntityException($"Коментар с Id {commentId} не съществува!");
+
+            await repository.DeleteAsync(comment.Id);
+        }
+
+        public async Task<PagingModel<CommentDto>> GetAllActivePaginatedCommentsByArticleId(int articleId, int pageIndex, int pageSize)
+        {
+            IQueryable<Comment> comments = repository.All()
+                .Where(x => x.ArticleId == articleId && x.Status == CommentStatus.Approved)
+                .Include(x => x.Author)
+                .OrderByDescending(c => c.CreatedOn);
+
+            IQueryable<CommentDto> commentDtos = comments
+                .Select(x => new CommentDto()
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Content = x.Content,
+                    CreatedOn = x.CreatedOn,
+                    AuthorName = x.Author == null ? "Изтрит потребител" : x.Author.UserName
+                });
+
+            return await PagingModel<CommentDto>.CreateAsync(commentDtos, pageIndex, pageSize);
+        }
+
+        public async Task<PagingModel<CommentDto>> GetAllPendingPagedComments(int pageIndex, int pageSize)
+        {
+            IQueryable<Comment> comments = repository.All()
+                .Where(x => x.Status == CommentStatus.Pending)
+                .Include(x => x.Article)
+                .Include(x => x.Author)
+                .OrderByDescending(c => c.CreatedOn);
+
+            IQueryable<CommentDto> commentDtos = comments
+               .Select(x => new CommentDto()
+               {
+                   Id = x.Id,
+                   Title = x.Title,
+                   Content = x.Content,
+                   CreatedOn = x.CreatedOn,
+                   ArticleTitle = x.Article.Title,
+                   ArticleId = x.ArticleId,
+                   AuthorName = x.Author == null ? "Изтрит потребител" : x.Author.UserName
+               });
+
+            return await PagingModel<CommentDto>.CreateAsync(commentDtos, pageIndex, pageSize);
+        }
     }
 }

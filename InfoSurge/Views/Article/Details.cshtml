@@ -1,0 +1,107 @@
+﻿@using InfoSurge.Models.Article
+@{
+    ViewData["Title"] = $"{Model.Article.Title}";
+}
+@model ArticleDetailsModel
+
+@if (TempData["AddedComment"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check2-circle"></i> @TempData["AddedComment"]
+    </div>
+}
+
+<div class="container mt-2 mb-3">
+    <div class="card border-0 shadow border-top border-5 rounded">
+        <div class="card-body">
+            <div class="card text-white">
+                <img src="@Model.Article.MainImageUrl" class="card-img" alt="Недостъпно съдържание" style=" height: auto;">
+                <div class="card-img-overlay d-flex flex-column justify-content-end">
+                    <h1 class="card-title bg-dark bg-opacity-75 p-3 rounded">@Model.Article.Title</h1>
+                    <h4 class="card-text bg-dark bg-opacity-75 p-3 rounded">@Model.Article.Introduction</h4>
+                </div>
+            </div>
+            <div class="p-xxl-3">
+                <p class="card-subtitle mb-2 text-muted" style="display: inline;">
+                    @Model.Article.PublishDate | Автор:<strong> @Model.Article.Author</strong> 
+                    <i class="bi bi-chat-dots" style="font-size: 0.85em; margin-left: 10px;"></i> @Model.PagedComments.TotalCount
+                </p>
+                <p class="card-text">@Model.Article.Content</p>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#commentSection">
+        Покажи коментари
+    </button>
+
+    <div class="modal fade" id="commentSection" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Коментари</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Затвори"></button>
+                </div>
+                <div class="modal-body">
+                    @await Html.PartialAsync("_CommentsList", Model.PagedComments)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Затвори</button>
+                    <button type="button" class="btn btn-primary" onclick="switchToSecondModal()">Добави коментар</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addNewComment" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Добави коментар</h1>
+                </div>
+                <div class="modal-body">
+                    @await Html.PartialAsync("_AddCommentForm", Model.Comment)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="switchToFirstModal()">Назад</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            autosize(document.querySelectorAll("textarea"));
+        });
+    </script>
+
+    <script>
+        const firstModalEl = document.getElementById('commentSection');
+        const secondModalEl = document.getElementById('addNewComment');
+        const firstModal = new bootstrap.Modal(firstModalEl);
+        const secondModal = new bootstrap.Modal(secondModalEl, {
+            backdrop: 'static',
+            keyboard: false
+        });
+
+        function switchToSecondModal() {
+            firstModalEl.addEventListener('hidden.bs.modal', function handler() {
+                secondModal.show();
+                firstModalEl.removeEventListener('hidden.bs.modal', handler);
+            });
+
+            firstModal.hide();
+        }
+
+        function switchToFirstModal() {
+            secondModalEl.addEventListener('hidden.bs.modal', function handler() {
+                firstModal.show();
+                secondModalEl.removeEventListener('hidden.bs.modal', handler);
+            });
+
+            secondModal.hide();
+        }
+    </script>
+}

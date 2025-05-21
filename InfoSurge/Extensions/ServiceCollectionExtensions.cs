@@ -19,6 +19,7 @@ namespace InfoSurge.Extensions
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IArticleImageService, ArticleImageService>();
             services.AddScoped<ICategoryArticleService, CategoryArticleService>();
+            services.AddScoped<ICommentService, CommentService>();
 
             services.AddMvc(options =>
                 options

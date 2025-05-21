@@ -15,5 +15,6 @@ namespace InfoSurge.Core.Interfaces
         Task<ArticleDto> GetByIdAsync(int id);
         Task DeleteAsync(int id);
         Task ChangeDirectory(int articleId);
+        Task<ArticleDto> GetArticleDetailsById(int articleId);
     }
 }

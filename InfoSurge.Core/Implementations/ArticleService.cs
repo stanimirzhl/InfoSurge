@@ -6,6 +6,7 @@ using InfoSurge.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -144,6 +145,34 @@ namespace InfoSurge.Core.Implementations
                 });
 
             return PagingModel<ArticleDto>.CreateAsync(allMappedArticles, pageIndex, pageSize);
+        }
+
+        public async Task<ArticleDto> GetArticleDetailsById(int articleId)
+        {
+            Article article = await repository
+                .AllAsReadOnly()
+                .Include(x => x.Author)
+                .Include(x => x.ArticleImages)
+                .Include(x => x.CategoryArticles)
+                    .ThenInclude(x => x.Category)
+                .FirstOrDefaultAsync(x => x.Id == articleId) ?? throw new NoEntityException($"Новина с Id {articleId} не е намерена!");
+
+            return new ArticleDto
+            {
+                Id = article.Id,
+                Title = article.Title,
+                Introduction = article.Introduction,
+                Content = article.Content,
+                MainImageUrl = article.MainImageUrl,
+                PublishDate = article.PublishDate,
+                AuthorName = article.Author == null ? "Изтрит потребител" : (article.Author.FirstName + " " + article.Author.LastName),
+                AdditionalImages = article.ArticleImages
+                    .Select(i => i.ImgUrl)
+                    .ToList(),
+                CategoryNames = article.CategoryArticles
+                    .Select(c => c.Category.Name)
+                    .ToList()
+            };
         }
     }
 }

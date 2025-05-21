@@ -1,0 +1,50 @@
+﻿@using InfoSurge.Core
+@using InfoSurge.Models.Comment
+@model PagingModel<CommentVM>
+
+<div class="mt-4">
+    <h4>Коментари чакащи одобрение</h4>
+    @if (Model.Items.Any())
+    {
+        @foreach (CommentVM comment in Model.Items)
+        {
+            <div class="card mb-3 shadow-sm">
+
+                <div class="card-body">
+                    <a href='@Url.Action("Details", "Article", new { id = comment.ArticleId })' class="card p-3 mb-2 text-decoration-none shadow-sm">
+                        <div class="text-muted small">Коментар от новината:</div>
+                        <div class="fw-semibold">@comment.ArticleTitle</div>
+                    </a>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <form asp-action="Approve">
+                            <input hidden name="commentId" value="@comment.Id" />
+                            <button class="btn btn-success btn-sm mt-2" asp-action="Approve" asp-controller="Comment"><i class="bi bi-check-lg"></i></button>
+                        </form>
+                        <form asp-action="Reject">
+                            <input hidden name="commentId" value="@comment.Id" />
+                            <button class="btn btn-danger btn-sm mt-2" asp-action="Reject" asp-controller="Comment"><i class="bi bi-x-lg"></i></button>
+                        </form>
+                    </div>
+                    <p class="card-text">
+                        <strong>Автор:</strong> @comment.AuthorName
+                    </p>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Публикуван на: @comment.CreatedOn
+                    </h6>
+                    <h6 class="card-text"><strong>@comment.Title</strong></h6>
+
+                    <p class="card-text">@comment.Content</p>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-warning text-center">
+                Няма коментари чакащи одобрение.
+            </div>
+        </div>
+    }
+</div>
+

@@ -1,11 +1,14 @@
 ﻿using InfoSurge.Core;
 using InfoSurge.Core.DTOs.Article;
 using InfoSurge.Core.DTOs.Category;
+using InfoSurge.Core.DTOs.Comment;
 using InfoSurge.Core.Implementations;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Article;
 using InfoSurge.Models.Category;
+using InfoSurge.Models.Comment;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Security.Claims;
 
@@ -18,14 +21,21 @@ namespace InfoSurge.Controllers
         private IFileService fileService;
         private ICategoryService categoryService;
         private ICategoryArticleService categoryArticleService;
+        private ICommentService commentService;
 
-        public ArticleController(IArticleService articleService, IArticleImageService articleImageService, IFileService fileService, ICategoryService categoryService, ICategoryArticleService categoryArticleService)
+        public ArticleController(IArticleService articleService, 
+            IArticleImageService articleImageService, 
+            IFileService fileService, 
+            ICategoryService categoryService,
+            ICategoryArticleService categoryArticleService,
+            ICommentService commentService)
         {
             this.articleService = articleService;
             this.articleImageService = articleImageService;
             this.fileService = fileService;
             this.categoryService = categoryService;
             this.categoryArticleService = categoryArticleService;
+            this.commentService = commentService;
         }
 
         public IActionResult Index()
@@ -245,6 +255,50 @@ namespace InfoSurge.Controllers
                 await fileService.DeleteImagesFolder(id);
 
                 return RedirectToAction("Index", "Home");
+            }
+            catch (NoEntityException ex)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id, int pageIndex = 1)
+        {
+            try
+            {
+                ArticleDto articleDto = await articleService.GetArticleDetailsById(id);
+
+                ArticleVM articleVM = new ArticleVM()
+                {
+                    Id = articleDto.Id,
+                    Title = articleDto.Title,
+                    Introduction = articleDto.Introduction,
+                    Content = articleDto.Content,
+                    MainImageUrl = articleDto.MainImageUrl,
+                    AdditionalImages = articleDto.AdditionalImages,
+                    Author = articleDto.AuthorName,
+                    PublishDate = articleDto.PublishDate.ToString("f", System.Globalization.CultureInfo.GetCultureInfo("bg-BG")),
+                    ArticleCategories = articleDto.CategoryNames
+                };
+
+                PagingModel<CommentDto> pagedCommentDto = await commentService.GetAllActivePaginatedCommentsByArticleId(id, pageIndex, 50);
+
+                ArticleDetailsModel articleDetails = new ArticleDetailsModel()
+                {
+                    Article = articleVM,
+                    PagedComments = pagedCommentDto.Map(x => new CommentVM()
+                    {
+                        Id = x.Id,
+                        Title = x.Title,
+                        Content = x.Content,
+                        AuthorName = x.AuthorName,
+                        CreatedOn = x.CreatedOn.ToString("f", System.Globalization.CultureInfo.GetCultureInfo("bg-BG"))
+                    }),
+                    Comment = new CommentFormModel() { ArticleId = id }
+                };
+
+                return View(articleDetails);
             }
             catch (NoEntityException ex)
             {
