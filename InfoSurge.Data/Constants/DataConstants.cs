@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,11 +58,33 @@ namespace InfoSurge.Data.Constants
             public const int UserLastNameMaxLength = 30;
             public const int UserLastNameMinLength = 5;
 
+            public const int UserNameMaxLength = 25;
+            public const int UserNameMinLength = 5;
+
+            public const int UserPasswordMaxLength = 25;
+            public const int UserPasswordMinLength = 5;
+
             public enum UserStatus
             {
                 Pending = 0,
                 Approved = 1
             }
+
+            public const string UserFirstNameRequiredErrorMessage = "Името на потребителя е задължително!";
+            public const string UserFirstNameLengthMessage = "Дължината на името на потребителя трябва да е между {2} и {1} символа дълго!";
+
+            public const string UserLastNameRequiredErrorMessage = "Фамилията на потребителя е задължителна!";
+            public const string UserLastNameLengthMessage = "Дължината на фамилията на потребителя трябва да е между {2} и {1} символа дълго!";
+
+            public const string UserNameRequiredErrorMessage = "Потребителското име е задължително!";
+            public const string UserNameLengthMessage = "Дължината на потребителското име трябва да е между {2} и {1} символа дълго!";
+
+            public const string UserPasswordRequiredErrorMessage = "Паролата е задължителна!";
+            public const string UserPasswordLengthMessage = "Дължината на паролата трябва да е между {2} и {1} символа дълго!";
+            public const string UserPasswordNotMatchErrorMessage = "Паролите не съвпадат!";
+
+            public const string UserEmailRequiredErrorMessage = "Имейл адреса е задължителен!";
+            public const string UserEmailInvalidErrorMessage = "Имейл адреса не е в правилния формат, моля опитайте отново (формат: 'example@example.com')!";
         }
 
         public static class CommentConstants

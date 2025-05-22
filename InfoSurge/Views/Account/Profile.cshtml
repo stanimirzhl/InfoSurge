@@ -1,0 +1,49 @@
+﻿@using InfoSurge.Models.Account
+@{
+    ViewData["Title"] = "Профил";
+}
+@model SettingsViewModel
+<h2>Здравейте, @Model.UserFullName</h2>
+
+<div>
+    <h3>Изполвайте бутоните по-долу за навигация между страниците</h3>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Profile", "Account",new { section = "profile"})">Профил</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Profile", "Account", new { section = "changePassword" })">Смяна на паролата</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Profile", "Account", new { section = "savedArticles" })">Запазени статии</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-9">
+            <div id="content-area">
+                @if (Model.Section == "profile")
+                {
+                    @await Html.PartialAsync("_SettingsPartial", Model)
+                }
+                else if (Model.Section == "changePassword")
+                {
+                    @await Html.PartialAsync("_ChangePasswordPartial", Model)
+                }
+                else if (Model.Section == "savedArticles")
+                {
+                    @await Html.PartialAsync("_SavedArticlesPartial", Model)
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script href="~/Scripts/jquery.unobtrusive*"></script>
+    <script href="~/Scripts/jquery.validate*"></script>
+
+}

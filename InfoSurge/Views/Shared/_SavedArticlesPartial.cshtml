@@ -1,0 +1,51 @@
+﻿@using InfoSurge.Models.Account
+@using InfoSurge.Models.Article
+@model SettingsViewModel
+
+@if (Model.SavedArticles.Any())
+{
+    <div class="container">
+        <div class="row">
+            @foreach (ArticleVM article in Model.SavedArticles)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card border-0 shadow-sm border-top border-5 rounded h-100">
+                        <img src="@article.MainImageUrl" class="card-img-top rounded-top" alt="Недостъпно съдържание" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-dark text-uppercase text-center fw-semibold">@article.Title</h5>
+                            <p class="card-text text-muted small text-center">@article.Introduction</p>
+                            <p class="text-muted small text-center mb-3">@article.PublishDate</p>
+
+                            <div class="mt-auto">
+                                @* Uncomment to restrict actions to editors *@
+                                @* @if (User.IsInRole("Редактор")) *@
+                                @* { *@
+                                <div class="d-grid gap-2">
+                                    <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-outline-primary btn-sm rounded-pill">Подробно</a>
+                                    <a asp-controller="Article" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-outline-warning btn-sm rounded-pill">Редактирай</a>
+                                    <a asp-controller="Article" asp-action="Delete" asp-route-id="@article.Id" class="btn btn-outline-danger btn-sm rounded-pill">Изтрий</a>
+                                </div>
+                                @* } *@
+                                @* else *@
+                                @* { *@
+                                @*     <div class="d-grid"> *@
+                                @*         <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-primary btn-sm rounded-pill">📄 Подробно</a> *@
+                                @*     </div> *@
+                                @* } *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="col-12">
+        <div class="alert alert-primary text-center">
+            Потребителя няма запазени статии!
+        </div>
+    </div>
+}
+

@@ -26,6 +26,72 @@
                     @Model.Article.PublishDate | Автор:<strong> @Model.Article.Author</strong> 
                     <i class="bi bi-chat-dots" style="font-size: 0.85em; margin-left: 10px;"></i> @Model.PagedComments.TotalCount
                 </p>
+                @if (Model.Article.IsUserSignedIn)
+                {
+                    bool userReaction = Model.Article.HasUserReacted;
+                    bool? isLike = Model.Article.UserReaction;
+
+                    if(isLike == null)
+                    {
+                        <form asp-action="LikeUnLike" asp-controller="React" method="post" style="display:inline;">
+                            <input type="hidden" name="articleId" value="@Model.Article.Id" />
+                            <button type="submit" name="isLike" value="true" class="btn btn-outline-success border-0 small">
+                                @Model.Article.LikeDislikeCount.Item1👍
+                            </button>
+                            <button type="submit" name="isLike" value="false" class="btn btn-outline-danger border-0 small">
+                                @Model.Article.LikeDislikeCount.Item2👎
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="LikeUnLike" asp-controller="React" method="post" style="display:inline;">
+                            <input type="hidden" name="articleId" value="@Model.Article.Id" />
+                            <button type="submit" name="isLike" value="true" class="btn btn-outline-success border-0 small" @(isLike == true ? "disabled" : "")>
+                                @Model.Article.LikeDislikeCount.Item1👍
+                            </button>
+                            <button type="submit" name="isLike" value="false" class="btn btn-outline-danger border-0 small" @(isLike == false ? "disabled" : "")>
+                                @Model.Article.LikeDislikeCount.Item2👎
+                            </button>
+                        </form>
+                    }
+                }
+                else
+                {
+                    <form asp-action="LikeUnLike" asp-controller="React" method="post" style="display:inline;">
+                        <input type="hidden" name="articleId" value="@Model.Article.Id" />
+                        <a href="@Url.Action("Login", "Account", new { ReturnUrl = Url.Action("Details", "Article", new { id = Model.Article.Id }) })" name="isLike" value="true" class="btn btn-outline-success border-0 small">
+                            @Model.Article.LikeDislikeCount.Item1👍
+                        </a>
+                        <a href="@Url.Action("Login", "Account", new { ReturnUrl = Url.Action("Details", "Article", new { id = Model.Article.Id }) })" name="isLike" value="false" class="btn btn-outline-danger border-0 small">
+                            @Model.Article.LikeDislikeCount.Item2👎
+                        </a>
+                    </form>
+                }
+                @if (!Model.Article.IsUserSignedIn)
+                {
+                    <form style="display:inline; float: right;">
+                        <a href="@Url.Action("Login", "Account", new { ReturnUrl = Url.Action("Details", "Article", new { id = Model.Article.Id }) })"><i class="bi bi-bookmark"></i></a>
+                    </form>
+                }
+                else
+                {
+                    if (Model.Article.UserHasSavedArticle)
+                    {
+                        <form asp-action="SaveArticle" asp-controller="SavedArticle" style="display:inline; float: right;">
+                            <input type="hidden" name="articleId" value="@Model.Article.Id" />
+                            <button type="submit" class="btn"><i class="bi bi-bookmark-fill"></i></button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="SaveArticle" asp-controller="SavedArticle" style="display:inline; float: right;">
+                            <input type="hidden" name="articleId" value="@Model.Article.Id" />
+                            <button type="submit" class="btn"><i class="bi bi-bookmark"></i></button>
+                        </form>
+
+                    }
+                }
                 <p class="card-text">@Model.Article.Content</p>
             </div>
         </div>
@@ -58,7 +124,14 @@
                     <h1 class="modal-title fs-5">Добави коментар</h1>
                 </div>
                 <div class="modal-body">
-                    @await Html.PartialAsync("_AddCommentForm", Model.Comment)
+                    @if (!Model.Article.IsUserSignedIn)
+                    {
+                        <a href="@Url.Action("Login", "Account", new { ReturnUrl = Url.Action("Details", "Article", new { id = Model.Article.Id }) })" class="btn btn-primary">Влезте в профила си,за да добавите коментар</a>
+                    }
+                    else
+                    {
+                        @await Html.PartialAsync("_AddCommentForm", Model.Comment)
+                    }
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="switchToFirstModal()">Назад</button>

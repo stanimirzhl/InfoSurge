@@ -20,6 +20,9 @@ namespace InfoSurge.Extensions
             services.AddScoped<IArticleImageService, ArticleImageService>();
             services.AddScoped<ICategoryArticleService, CategoryArticleService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ISavedArticleService, SavedArticleService>();
+            services.AddScoped<IReactService, ReactService>();
 
             services.AddMvc(options =>
                 options
@@ -33,7 +36,7 @@ namespace InfoSurge.Extensions
 
         public static IServiceCollection AddDbServices(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            string connectionString = config.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             services.AddDbContext<InfoSurgeDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
@@ -57,10 +60,22 @@ namespace InfoSurge.Extensions
 
             return services;
         }
+        public static IServiceCollection AddAccountOptions(this IServiceCollection services)
+        {
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ReturnUrlParameter = "ReturnUrl";
+            });
+
+            return services;
+        }
         public static void ApplyDatabaseMigrations(this IHost app)
         {
-            using var scope = app.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<InfoSurgeDbContext>();
+            using IServiceScope scope = app.Services.CreateScope();
+            InfoSurgeDbContext db = scope.ServiceProvider.GetRequiredService<InfoSurgeDbContext>();
             db.Database.Migrate();
         }
     }

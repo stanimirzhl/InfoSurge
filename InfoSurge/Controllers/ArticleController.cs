@@ -22,13 +22,19 @@ namespace InfoSurge.Controllers
         private ICategoryService categoryService;
         private ICategoryArticleService categoryArticleService;
         private ICommentService commentService;
+        private IAccountService accountService;
+        private ISavedArticleService savedArticleService;
+        private IReactService reactService;
 
         public ArticleController(IArticleService articleService, 
             IArticleImageService articleImageService, 
             IFileService fileService, 
             ICategoryService categoryService,
             ICategoryArticleService categoryArticleService,
-            ICommentService commentService)
+            ICommentService commentService, 
+            IAccountService accountService,
+            ISavedArticleService savedArticleService,
+            IReactService reactService)
         {
             this.articleService = articleService;
             this.articleImageService = articleImageService;
@@ -36,6 +42,9 @@ namespace InfoSurge.Controllers
             this.categoryService = categoryService;
             this.categoryArticleService = categoryArticleService;
             this.commentService = commentService;
+            this.accountService = accountService;
+            this.savedArticleService = savedArticleService;
+            this.reactService = reactService;
         }
 
         public IActionResult Index()
@@ -279,7 +288,12 @@ namespace InfoSurge.Controllers
                     AdditionalImages = articleDto.AdditionalImages,
                     Author = articleDto.AuthorName,
                     PublishDate = articleDto.PublishDate.ToString("f", System.Globalization.CultureInfo.GetCultureInfo("bg-BG")),
-                    ArticleCategories = articleDto.CategoryNames
+                    ArticleCategories = articleDto.CategoryNames,
+                    IsUserSignedIn = await accountService.IsUserSignedIn(User),
+                    UserHasSavedArticle = await savedArticleService.HasUserSavedThisArticle(User.FindFirstValue(ClaimTypes.NameIdentifier), id),
+                    HasUserReacted = await reactService.HasUserReactedToArticle(User.FindFirstValue(ClaimTypes.NameIdentifier), id),
+                    LikeDislikeCount = await reactService.GetAllReactionsForArticle(id),
+                    UserReaction = await reactService.GetUserReactionToArticle(User.FindFirstValue(ClaimTypes.NameIdentifier), id)
                 };
 
                 PagingModel<CommentDto> pagedCommentDto = await commentService.GetAllActivePaginatedCommentsByArticleId(id, pageIndex, 50);

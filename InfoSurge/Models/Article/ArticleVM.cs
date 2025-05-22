@@ -21,5 +21,15 @@ namespace InfoSurge.Models.Article
         public string Author { get; set; }
 
         public List<string> ArticleCategories { get; set; } = new List<string>();
+
+        public bool IsUserSignedIn { get; set; }
+
+        public bool UserHasSavedArticle { get; set; }
+
+        public bool HasUserReacted { get; set; }
+
+        public bool? UserReaction { get; set; }
+
+        public (int, int) LikeDislikeCount { get; set; }
     }
 }

@@ -6,6 +6,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddCoreServices();
 builder.Services.AddDbServices(builder.Configuration);
 builder.Services.AddIdentityServices();
+builder.Services.AddAccountOptions();
 
 var app = builder.Build();
 
