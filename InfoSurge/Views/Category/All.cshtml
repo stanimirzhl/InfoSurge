@@ -7,8 +7,6 @@
 @model PagingModel<CategoryVM>
 @{
     ViewData["Title"] = "Категории";
-    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    var user = await userManager.FindByIdAsync(userId);
 }
 @if (TempData["Success"] != null)
 {
@@ -32,7 +30,7 @@ else
                 <th>Име</th>
                 <th>Описание</th>
                 <th>Следвай категория</th>
-                @if (User.IsInRole("Редактор"))
+                @if ((bool)ViewData["IsEditor"])
                 {
                     <th>Бутони за управление</th>
                 }
@@ -65,13 +63,13 @@ else
 
 
                         </td>
-                        @*@if (User.IsInRole("Редактор"))
-                        {*@
+                        @if ((bool)ViewData["IsEditor"])
+                        {
                             <td>
                                 <a asp-controller="Category" asp-action="Edit" class="btn btn-outline-info" asp-route-id="@category.Id"><i class="bi bi-pencil-square"></i>Редактирай</a>
                                 <a asp-controller="Category" asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@category.Id"><i class="bi bi-x-circle"></i>Изтрий</a>
                             </td>
-                        @*}*@
+                        }
                     </tr>
                 }
             }
@@ -81,13 +79,13 @@ else
     </table>
 }
 <div class="container-md">
-    @*@if (User.IsInRole("Редактор"))
-    {*@
-    <a asp-controller="Category" asp-action="Add" class="btn btn-outline-success add-btn">
+    @if ((bool)ViewData["IsEditor"])
+    {
+        <a asp-controller="Category" asp-action="Add" class="btn btn-outline-success add-btn">
 
-        <i class="bi bi-plus-circle"></i> Добави категория
-    </a>
-    @*}*@
+            <i class="bi bi-plus-circle"></i> Добави категория
+        </a>
+    }
 </div>
 @{
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";

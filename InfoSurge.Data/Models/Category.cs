@@ -22,5 +22,6 @@ namespace InfoSurge.Data.Models
         public string Description { get; set; }
 
         public virtual ICollection<CategoryArticle> CategoryArticles { get; set; } = new HashSet<CategoryArticle>();
+        public virtual ICollection<CategoryUser> CategoryUsers { get; set; } = new HashSet<CategoryUser>();
     }
 }

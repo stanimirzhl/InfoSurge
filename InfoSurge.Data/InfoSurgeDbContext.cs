@@ -24,6 +24,7 @@ namespace InfoSurge.Data
         public virtual DbSet<ArticleImage> ArticleImages { get; set; }
         public virtual DbSet<CategoryArticle> CategoryArticles { get; set; }
         public virtual DbSet<SavedArticle> SavedArticles { get; set; }
+        public virtual DbSet<CategoryUser> CategoryUsers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -74,6 +75,18 @@ namespace InfoSurge.Data
                 .HasOne(ca => ca.Article)
                 .WithMany(a => a.CategoryArticles)
                 .HasForeignKey(ca => ca.ArticleId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CategoryUser>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.CategoryUsers)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CategoryUser>()
+                .HasOne(x => x.Category)
+                .WithMany(x => x.CategoryUsers)
+                .HasForeignKey(x => x.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<SavedArticle>()

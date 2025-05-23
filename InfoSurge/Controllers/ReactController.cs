@@ -19,7 +19,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> LikeUnLike(int articleId, bool isLike)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

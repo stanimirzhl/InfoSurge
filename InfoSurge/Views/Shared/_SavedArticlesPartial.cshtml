@@ -17,21 +17,20 @@
                             <p class="text-muted small text-center mb-3">@article.PublishDate</p>
 
                             <div class="mt-auto">
-                                @* Uncomment to restrict actions to editors *@
-                                @* @if (User.IsInRole("Редактор")) *@
-                                @* { *@
-                                <div class="d-grid gap-2">
-                                    <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-outline-primary btn-sm rounded-pill">Подробно</a>
-                                    <a asp-controller="Article" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-outline-warning btn-sm rounded-pill">Редактирай</a>
-                                    <a asp-controller="Article" asp-action="Delete" asp-route-id="@article.Id" class="btn btn-outline-danger btn-sm rounded-pill">Изтрий</a>
-                                </div>
-                                @* } *@
-                                @* else *@
-                                @* { *@
-                                @*     <div class="d-grid"> *@
-                                @*         <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-primary btn-sm rounded-pill">📄 Подробно</a> *@
-                                @*     </div> *@
-                                @* } *@
+                                @if ((bool)ViewData["IsEditor"])
+                                {
+                                    <div class="d-grid gap-2">
+                                        <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-outline-primary btn-sm rounded-pill">Подробно</a>
+                                        <a asp-controller="Article" asp-action="Edit" asp-route-id="@article.Id" class="btn btn-outline-warning btn-sm rounded-pill">Редактирай</a>
+                                        <a asp-controller="Article" asp-action="Delete" asp-route-id="@article.Id" class="btn btn-outline-danger btn-sm rounded-pill">Изтрий</a>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-grid">
+                                        <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-primary btn-sm rounded-pill">Подробно</a> 
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

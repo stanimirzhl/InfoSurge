@@ -6,6 +6,7 @@ using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace InfoSurge.Extensions
@@ -23,6 +24,7 @@ namespace InfoSurge.Extensions
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ISavedArticleService, SavedArticleService>();
             services.AddScoped<IReactService, ReactService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddMvc(options =>
                 options
@@ -72,11 +74,23 @@ namespace InfoSurge.Extensions
 
             return services;
         }
-        public static void ApplyDatabaseMigrations(this IHost app)
+        public static async Task ApplyDatabaseMigrations(this IHost app)
         {
             using IServiceScope scope = app.Services.CreateScope();
             InfoSurgeDbContext db = scope.ServiceProvider.GetRequiredService<InfoSurgeDbContext>();
-            db.Database.Migrate();
+            RoleManager<IdentityRole> roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            await db.Database.MigrateAsync();
+
+            string[] roles = ["Administrator", "Editor", "Moderator", "User"];
+
+            foreach (string role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
         }
     }
 }

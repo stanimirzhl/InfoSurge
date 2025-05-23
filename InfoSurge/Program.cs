@@ -10,7 +10,7 @@ builder.Services.AddAccountOptions();
 
 var app = builder.Build();
 
-app.ApplyDatabaseMigrations();
+await app.ApplyDatabaseMigrations();
 
 if (!app.Environment.IsDevelopment())
 {

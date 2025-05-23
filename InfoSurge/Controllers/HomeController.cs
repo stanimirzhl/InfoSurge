@@ -1,5 +1,6 @@
 using InfoSurge.Core;
 using InfoSurge.Core.DTOs.Article;
+using InfoSurge.Core.Implementations;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Models;
 using InfoSurge.Models.Article;
@@ -24,6 +25,7 @@ namespace InfoSurge.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int pageIndex = 1, ArticleIndexModel categoryAndSearchTermModel = null)
         {
+            ViewData["IsEditor"] = User.IsInRole("Editor");
 
             PagingModel<ArticleDto> pagedArticleDtos = await articleService.GetAllPagedArticles(categoryAndSearchTermModel.SearchTerm, pageIndex, 20, categoryAndSearchTermModel.SelectedCategoryId);
 

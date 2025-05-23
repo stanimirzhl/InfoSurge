@@ -3,6 +3,7 @@ using InfoSurge.Core.DTOs.Article;
 using InfoSurge.Core.DTOs.Comment;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Comment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
 using System.Runtime.InteropServices;
@@ -22,6 +23,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> All(int pageIndex = 1, int pageSize = 10)
         {
             PagingModel<CommentDto> pagedCommentDto = await commentService.GetAllPendingPagedComments(pageIndex, pageSize);
@@ -41,6 +43,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> AddComment(int articleId, CommentFormModel formModel)
         {
             if (!ModelState.IsValid)
@@ -69,6 +72,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> Approve(int commentId)
         {
             try
@@ -85,6 +89,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> Reject(int commentId)
         {
             try

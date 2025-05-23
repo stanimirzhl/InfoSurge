@@ -27,6 +27,16 @@ namespace InfoSurge.Core.Implementations
             return await userManager.CreateAsync(user, password);
         }
 
+        public async Task AddUserRole(User user)
+        {
+            await userManager.AddToRoleAsync(user, "User");
+        }
+
+        public async Task Delete(User user)
+        {
+            await userManager.DeleteAsync(user);
+        }
+
         public async Task<bool> EmailExists(string email)
         {
             return await userManager.FindByEmailAsync(email) != null;
@@ -49,6 +59,11 @@ namespace InfoSurge.Core.Implementations
             return user.Status == UserStatus.Approved;
         }
 
+        public async Task<bool> IsUserInRole(string roleName, ClaimsPrincipal principal)
+        {
+            return principal.IsInRole(roleName);
+        }
+
         public async Task<bool> IsUserSignedIn(ClaimsPrincipal principal)
         {
             return signInManager.IsSignedIn(principal);
@@ -61,7 +76,7 @@ namespace InfoSurge.Core.Implementations
 
         public async Task Logout()
         {
-           await signInManager.SignOutAsync();
+            await signInManager.SignOutAsync();
         }
 
         public async Task SignInAgain(User user)
@@ -86,9 +101,17 @@ namespace InfoSurge.Core.Implementations
             return await userManager.UpdateAsync(user);
         }
 
+        public async Task UpdateStatus(User user)
+        {
+            user.Status = UserStatus.Approved;
+
+            await userManager.UpdateAsync(user);
+        }
+
         public async Task<bool> UserNameExists(string userName)
         {
             return await userManager.FindByNameAsync(userName) != null;
         }
+
     }
 }

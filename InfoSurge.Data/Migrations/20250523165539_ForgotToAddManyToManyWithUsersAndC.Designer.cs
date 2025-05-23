@@ -4,6 +4,7 @@ using InfoSurge.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoSurge.Data.Migrations
 {
     [DbContext(typeof(InfoSurgeDbContext))]
-    partial class InfoSurgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250523165539_ForgotToAddManyToManyWithUsersAndC")]
+    partial class ForgotToAddManyToManyWithUsersAndC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -2,6 +2,7 @@
 using InfoSurge.Core.DTOs.Category;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Category;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +20,8 @@ namespace InfoSurge.Controllers
         [HttpGet]
         public async Task<IActionResult> All(int pageIndex = 1, int pageSize = 5)
         {
+            ViewData["IsEditor"] = User.IsInRole("Editor");
+
             PagingModel<CategoryDto> pagedCategories = await categoryService.GetAllPagedCategories(pageIndex, pageSize);
 
             PagingModel<CategoryVM> pagedViewModels =
@@ -33,11 +36,13 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Editor")]
         public IActionResult Add()
         {
             return View(new CategoryFormModel());
         }
         [HttpPost]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Add(CategoryFormModel formModel)
         {
             if (!ModelState.IsValid)
@@ -56,6 +61,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Edit(int id)
         {
             try
@@ -78,6 +84,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Edit(int id, CategoryFormModel formModel)
         {
             if (!ModelState.IsValid)
@@ -107,6 +114,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -130,6 +138,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Delete(int id, CategoryDeleteVM categoryDeleteVM)
         {
             if (id != categoryDeleteVM.Id)

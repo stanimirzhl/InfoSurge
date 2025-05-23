@@ -35,7 +35,7 @@
                    value="@Model.SearchTerm" />
         </div>
         <div class="col-md-3">
-            <button type="submit" class="btn btn-outline-info w-25">Търси</button>
+            <button type="submit" class="btn btn-outline-info w-50">Търси</button>
         </div>
     </div>
 </form>
@@ -55,7 +55,7 @@
     {
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
             <div class="card h-100 shadow-sm">
-                <img src="@article.MainImageUrl" class="card-img-top" alt="Недостъпно съдържание" style="height: fit-content"/>
+                <img src="@article.MainImageUrl" class="card-img-top" alt="Недостъпно съдържание" style="height: fit-content" />
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title opacity-75 text-uppercase text-center" title="@article.Title">@article.Title</h5>
                     <p class="card-text text-muted">@article.Introduction</p>
@@ -64,17 +64,17 @@
                     </p>
                     <a asp-action="Details" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-primary mt-2">Прочети</a>
 
-                    @*@if (User.IsInRole("Редактор"))
-                {*@
-                    <div class="row mt-2">
-                        <div class="col-6 pe-1">
-                            <a asp-action="Edit" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-warning w-100">Редактирай</a>
+                    @if ((bool)ViewData["IsEditor"])
+                    {
+                        <div class="row mt-2">
+                            <div class="col-6 pe-1">
+                                <a asp-action="Edit" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-warning w-100">Редактирай</a>
+                            </div>
+                            <div class="col-6 ps-1">
+                                <a asp-action="Delete" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-danger w-100">Изтрий</a>
+                            </div>
                         </div>
-                        <div class="col-6 ps-1">
-                            <a asp-action="Delete" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-danger w-100">Изтрий</a>
-                        </div>
-                    </div>
-                    @*}*@
+                    }
                 </div>
             </div>
         </div>
@@ -106,11 +106,11 @@
     </div>
 }
 
-@*@if (User.IsInRole("Редактор"))
-{*@
+@if ((bool)ViewData["IsEditor"])
+{
     <div class="text-center my-4">
         <a asp-controller="Article" asp-action="Add" class="btn add-btn">
             <i class="bi bi-plus-circle"></i> Добави нова новина
         </a>
     </div>
-@*}*@
+}

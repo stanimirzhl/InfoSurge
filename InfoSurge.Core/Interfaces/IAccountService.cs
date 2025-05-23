@@ -31,9 +31,16 @@ namespace InfoSurge.Core.Interfaces
 
         Task<IdentityResult> AddAsync(User user, string password);
 
+        Task Delete(User user);
+
+        Task UpdateStatus(User user);
+
+        Task AddUserRole(User user);
+
         Task<SignInResult> Login(string userName, string password);
 
         Task Logout();
 
+        Task<bool> IsUserInRole(string roleName, ClaimsPrincipal principal);
     }
 }

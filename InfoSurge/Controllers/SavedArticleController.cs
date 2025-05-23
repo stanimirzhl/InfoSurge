@@ -20,7 +20,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> SaveArticle(int articleId)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);

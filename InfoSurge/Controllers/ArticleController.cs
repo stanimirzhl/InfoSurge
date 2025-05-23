@@ -7,6 +7,7 @@ using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Article;
 using InfoSurge.Models.Category;
 using InfoSurge.Models.Comment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
@@ -53,6 +54,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Add()
         {
             ArticleFormModel formModel = new ArticleFormModel
@@ -63,6 +65,7 @@ namespace InfoSurge.Controllers
             return View(formModel);
         }
         [HttpPost]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Add(ArticleFormModel formModel)
         {
             if (!ModelState.IsValid)
@@ -114,6 +117,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Edit(int id)
         {
             try
@@ -139,6 +143,7 @@ namespace InfoSurge.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Edit(int id, ArticleFormModel formModel)
         {
             if (!ModelState.IsValid)
@@ -223,6 +228,7 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -249,6 +255,7 @@ namespace InfoSurge.Controllers
             }
         }
         [HttpPost]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> Delete(int id, ArticleDeleteVM articleDeleteVM)
         {
             if (id != articleDeleteVM.Id)

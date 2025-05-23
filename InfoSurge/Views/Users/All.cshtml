@@ -1,0 +1,113 @@
+﻿@using InfoSurge.Core
+@using InfoSurge.Models.Users
+@model PagingModel<UserVM>
+
+@if (!Model.Items.Any())
+{
+    <h1>Няма налични потребители</h1>
+}
+else
+{
+    <h1 class="text-primary mb-4">Потребители</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Потребителско име</th>
+                    <th>Електронна поща</th>
+                    <th>Име</th>
+                    <th>Фамилия</th>
+                    <th>Роли</th>
+                    @if ((bool)ViewData["IsAdmin"])
+                    {
+                        <th>Бутони за управление</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (UserVM user in Model.Items)
+                {
+                    <tr>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>
+                            @foreach (string role in user.Roles)
+                            {
+                                <span class="badge bg-info me-1">@role</span>
+                            }
+                        </td>
+
+                        @if ((bool)ViewData["IsAdmin"])
+                        {
+                            @if (user.Status == 0 && !user.IsUserInRole)
+                            {
+                                <td>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <form asp-action="Approve" method="post" class="m-0 p-0">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <button class="btn btn-success btn-sm" type="submit" title="Approve">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                        <form asp-action="Reject" method="post" class="m-0 p-0">
+                                            <input type="hidden" name="userId" value="@user.Id" />
+                                            <button class="btn btn-danger btn-sm" type="submit" title="Reject">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <a asp-controller="Users" asp-action="Edit" asp-route-id="@user.Id" class="btn btn-outline-info btn-sm me-2" title="Редактирай">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <form asp-controller="Users" asp-action="Delete" method="post" class="d-inline">
+                                        <input type="hidden" name="userId" value="@user.Id" />
+                                        <button class="btn btn-outline-danger btn-sm" type="submit" title="Изтрий">
+                                            <i class="bi bi-x-circle"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if ((bool)ViewData["IsAdmin"])
+{
+    <div class="container-md mt-4 d-flex justify-content-between">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            Върни се обратно
+        </a>
+        <a asp-controller="Users" asp-action="Create" class="btn btn-outline-success">
+            <i class="bi bi-plus-circle me-1"></i> Добави потребител
+        </a>
+    </div>
+}
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+@if (Model.Items.Any())
+{
+    <div class="d-flex justify-content-center align-items-center my-4">
+        <a asp-action="All" asp-route-pageIndex="@(Model.PageIndex - 1)" class="btn btn-secondary rounded @prevDisabled">
+            <i class="bi bi-chevron-left"></i>Предишна
+        </a>
+        <span class="badge bg-secondary fs-6 px-3 py-2 mx-1 rounded-pill" aria-live="polite">
+            @Model.PageIndex
+        </span>
+        <a asp-action="All" asp-route-pageIndex="@(Model.PageIndex + 1)" class="btn btn-secondary rounded @nextDisabled">
+            Следваща<i class="bi bi-chevron-right"></i>
+        </a>
+    </div>
+}

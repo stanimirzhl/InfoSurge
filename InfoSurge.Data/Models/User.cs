@@ -25,5 +25,6 @@ namespace InfoSurge.Data.Models
         public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
         public virtual ICollection<SavedArticle> SavedArticles { get; set; } = new HashSet<SavedArticle>();
         public virtual ICollection<Reaction> Reactions { get; set; } = new HashSet<Reaction>();
+        public virtual ICollection<CategoryUser> CategoryUsers { get; set; } = new HashSet<CategoryUser>();
     }
 }

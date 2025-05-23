@@ -26,6 +26,11 @@ namespace InfoSurge.Controllers
             this.savedArticleService = savedArticleService;
         }
 
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -138,13 +143,15 @@ namespace InfoSurge.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Profile(string section)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             try
             {
+                ViewData["IsEditor"] = User.IsInRole("Editor");
+
                 User user = await accountService.GetCurrentUserById(currentUserId);
 
                 List<ArticleDto> articleDtos = await savedArticleService.GetSavedArticlesByUserId(currentUserId);
@@ -179,7 +186,7 @@ namespace InfoSurge.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateProfile()
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -208,7 +215,7 @@ namespace InfoSurge.Controllers
             }
         }
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> UpdateProfile(SettingsViewModel formModel)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -243,13 +250,13 @@ namespace InfoSurge.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "User")]
         public IActionResult ChangePassword()
         {
             SettingsViewModel formModel = new SettingsViewModel();
             return PartialView("_ChangePasswordPartial", formModel);
         }
-        [Authorize]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> ChangePassowrd(SettingsViewModel formModel)
         {
             string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -293,7 +300,7 @@ namespace InfoSurge.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "User")]
         [HttpGet]
         public async Task<IActionResult> SavedArticles()
         {

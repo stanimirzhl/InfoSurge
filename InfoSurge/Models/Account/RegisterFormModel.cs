@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.UserConstants;
 
 namespace InfoSurge.Models.Account
@@ -41,5 +42,11 @@ namespace InfoSurge.Models.Account
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = UserPasswordNotMatchErrorMessage)]
         public string ConfirmPassword { get; set; }
+
+        public List<SelectListItem>? Roles { get; set; } = new List<SelectListItem>();
+
+        public List<string>? SelectedRolesIds { get; set; } = new List<string>();
+
+        public List<string>? RoleIdsToRemove { get; set; } = new List<string>();
     }
 }
