@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.UserConstants;
 
-namespace InfoSurge.Models.Account
+namespace InfoSurge.Models.Users
 {
-    public class RegisterFormModel
+    public class EditUserFormModel
     {
         [Required(ErrorMessage = UserEmailRequiredErrorMessage)]
         [EmailAddress(ErrorMessage = UserEmailInvalidErrorMessage)]
@@ -28,23 +28,23 @@ namespace InfoSurge.Models.Account
             ErrorMessage = UserNameLengthMessage)]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = UserPasswordRequiredErrorMessage)]
         [StringLength(UserPasswordMaxLength,
             MinimumLength = UserPasswordMinLength,
             ErrorMessage = UserPasswordLengthMessage)]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
-        [Required(ErrorMessage = UserPasswordRequiredErrorMessage)]
         [StringLength(UserPasswordMaxLength,
             MinimumLength = UserPasswordMinLength,
             ErrorMessage = UserPasswordLengthMessage)]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = UserPasswordNotMatchErrorMessage)]
-        public string ConfirmPassword { get; set; }
+        public string? ConfirmPassword { get; set; }
 
         public List<SelectListItem>? Roles { get; set; } = new List<SelectListItem>();
 
         public List<string>? SelectedRolesIds { get; set; } = new List<string>();
+
+        public List<string>? RoleIdsToRemove { get; set; } = new List<string>();
     }
 }

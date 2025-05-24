@@ -15,11 +15,13 @@ namespace InfoSurge.Controllers
     {
         private ICommentService commentService;
         private IArticleService articleService;
+        private IEmailService emailService;
 
-        public CommentController(ICommentService commentService, IArticleService articleService)
+        public CommentController(ICommentService commentService, IArticleService articleService, IEmailService emailService)
         {
             this.commentService = commentService;
             this.articleService = articleService;
+            this.emailService = emailService;
         }
 
         [HttpGet]
@@ -73,11 +75,19 @@ namespace InfoSurge.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Moderator")]
-        public async Task<IActionResult> Approve(int commentId)
+        public async Task<IActionResult> Approve(int commentId, int articleId)
         {
             try
             {
                 await commentService.Approve(commentId);
+
+                List<string> userEmails = await commentService.GetAllUsersEmailWhoHaveCommentedUnderArticle(articleId);
+
+                foreach (string email in userEmails)
+                {
+                    string message = "<p>Нов коментар под новина, под която сте коментирали.</p>";
+                    await emailService.SendEmailAsync(email, "Ново известие", message);
+                }
             }
             catch (NoEntityException ex)
             {

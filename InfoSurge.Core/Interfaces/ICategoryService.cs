@@ -16,5 +16,6 @@ namespace InfoSurge.Core.Interfaces
         Task<CategoryDto> GetByIdAsync(int id);
         Task DeleteAsync(int id);
         Task<List<SelectListItem>> GetCategoriesIntoSelectList();
+        Task<List<CategoryDto>> GetCategoryNamesIntoList();
     }
 }

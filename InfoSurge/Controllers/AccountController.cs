@@ -69,7 +69,7 @@ namespace InfoSurge.Controllers
 
             if (!result.Succeeded)
             {
-                foreach (var error in result.Errors)
+                foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
@@ -234,7 +234,7 @@ namespace InfoSurge.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
+                    foreach (IdentityError error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
@@ -286,7 +286,7 @@ namespace InfoSurge.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
+                    foreach (IdentityError error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }

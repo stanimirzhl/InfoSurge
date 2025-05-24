@@ -48,7 +48,7 @@
                             name="SelectedCategoryIds"
                             multiple="multiple"
                             class="form-control">
-                        @foreach (var category in Model.CategoryIds)
+                        @foreach (SelectListItem category in Model.CategoryIds)
                         {
                             <!option value="@category.Value" @(Model.SelectedCategoryIds.Contains(int.Parse(category.Value)) ? "selected" : "")>
                                 @category.Text

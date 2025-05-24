@@ -18,5 +18,7 @@ namespace InfoSurge.Core.Interfaces
         Task Remove(int commentId);
 
         Task<PagingModel<CommentDto>> GetAllPendingPagedComments(int pageIndex, int pageSize);
+
+        Task<List<string>> GetAllUsersEmailWhoHaveCommentedUnderArticle(int articleId);
     }
 }

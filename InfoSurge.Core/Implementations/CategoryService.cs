@@ -93,5 +93,17 @@ namespace InfoSurge.Core.Implementations
                 })
                 .ToListAsync();
         }
+
+        public async Task<List<CategoryDto>> GetCategoryNamesIntoList()
+        {
+            return await repository
+                .AllAsReadOnly()
+                .Select(x => new CategoryDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .ToListAsync();
+        }
     }
 }

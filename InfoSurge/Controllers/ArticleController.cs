@@ -4,11 +4,13 @@ using InfoSurge.Core.DTOs.Category;
 using InfoSurge.Core.DTOs.Comment;
 using InfoSurge.Core.Implementations;
 using InfoSurge.Core.Interfaces;
+using InfoSurge.Data.Models;
 using InfoSurge.Models.Article;
 using InfoSurge.Models.Category;
 using InfoSurge.Models.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.ComponentModel;
 using System.Diagnostics.Metrics;
 using System.Security.Claims;
@@ -26,16 +28,20 @@ namespace InfoSurge.Controllers
         private IAccountService accountService;
         private ISavedArticleService savedArticleService;
         private IReactService reactService;
+        private IEmailService emailService;
+        private ICategoryUserService categoryUserService;
 
-        public ArticleController(IArticleService articleService, 
-            IArticleImageService articleImageService, 
-            IFileService fileService, 
+        public ArticleController(IArticleService articleService,
+            IArticleImageService articleImageService,
+            IFileService fileService,
             ICategoryService categoryService,
             ICategoryArticleService categoryArticleService,
-            ICommentService commentService, 
+            ICommentService commentService,
             IAccountService accountService,
             ISavedArticleService savedArticleService,
-            IReactService reactService)
+            IReactService reactService,
+            ICategoryUserService categoryUserService,
+            IEmailService emailService)
         {
             this.articleService = articleService;
             this.articleImageService = articleImageService;
@@ -46,6 +52,8 @@ namespace InfoSurge.Controllers
             this.accountService = accountService;
             this.savedArticleService = savedArticleService;
             this.reactService = reactService;
+            this.emailService = emailService;
+            this.categoryUserService = categoryUserService;
         }
 
         public IActionResult Index()
@@ -108,6 +116,18 @@ namespace InfoSurge.Controllers
             if (formModel.SelectedCategoryIds.Count != 0)
             {
                 await categoryArticleService.AddAsync(articleId, formModel.SelectedCategoryIds);
+
+                List<string> userEmails = await categoryUserService.GetAllUserEmailsInArticleCategories(formModel.SelectedCategoryIds);
+
+                foreach (string email in userEmails)
+                {
+                    string message = $@"
+                    <h2>Нова статия в категория</h2>
+                    <p>Статията <strong>{formModel.Title}</strong> беше публикувана.</p>";
+
+                    await emailService.SendEmailAsync(email, "Ново известие", message);
+                }
+
             }
             await fileService.MoveImagesToArticleFolder(articleId);
             await articleService.ChangeDirectory(articleId);

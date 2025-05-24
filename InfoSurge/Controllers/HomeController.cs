@@ -51,6 +51,33 @@ namespace InfoSurge.Controllers
             return View(articleIndex);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(int id, int pageIndex = 1, string? searchTerm = null)
+        {
+            ViewData["IsEditor"] = User.IsInRole("Editor");
+
+            PagingModel<ArticleDto> pagedArticleDtos = await articleService.GetAllArticlesByCategoryId(id, pageIndex, 20, searchTerm);
+
+            ArticleIndexModel articleIndex = new ArticleIndexModel()
+            {
+                PagedArticleModel = pagedArticleDtos.Map(x => new ArticleVM()
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Introduction = x.Introduction,
+                    Content = x.Content,
+                    MainImageUrl = x.MainImageUrl,
+                    Author = x.AuthorName,
+                    PublishDate = x.PublishDate.ToString("HH:mm | dd.MM.yy"),
+                    AdditionalImages = x.AdditionalImages,
+                    ArticleCategories = x.CategoryNames
+                }),
+                SearchTerm = searchTerm
+            };
+
+            return View("Details", articleIndex);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

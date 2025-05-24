@@ -4,6 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddCoreServices();
+builder.Services.AddEmailService(builder.Configuration);
 builder.Services.AddDbServices(builder.Configuration);
 builder.Services.AddIdentityServices();
 builder.Services.AddAccountOptions();

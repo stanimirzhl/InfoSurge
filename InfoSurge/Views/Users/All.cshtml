@@ -2,6 +2,13 @@
 @using InfoSurge.Models.Users
 @model PagingModel<UserVM>
 
+@if (TempData["SuccessfulUpdate"] != null)
+{
+    <div class="alert alert-success">
+        <i class="bi bi-check2-circle"></i> @TempData["SuccessfulUpdate"]
+    </div>
+}
+
 @if (!Model.Items.Any())
 {
     <h1>Няма налични потребители</h1>
@@ -94,8 +101,8 @@ else
     </div>
 }
 @{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    string prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    string nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 @if (Model.Items.Any())
 {

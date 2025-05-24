@@ -12,22 +12,8 @@
     </div>
 }
 
-<form asp-action="Index" method="get">
+<form asp-action="Details" method="get">
     <div class="row pb-3 align-items-end">
-        <div class="col-md-2">
-            <div class="form-group">
-                <label for="SelectedCategoryId">Изберете категория:</label>
-                <select id="SelectedCategoryId" name="SelectedCategoryId" class="form-control">
-                    <option value="">Всички новини</option>
-                    @foreach (SelectListItem category in Model.CategoryIds)
-                    {
-                        <!option value="@int.Parse(category.Value)" @(int.Parse(category.Value) == Model.SelectedCategoryId ? "selected" : "")>
-                            @category.Text
-                        </!option>
-                    }
-                </select>
-            </div>
-        </div>
         <div class="col-md-5">
             <input name="SearchTerm"
                    class="form-control"
@@ -54,60 +40,24 @@
     @foreach (ArticleVM article in Model.PagedArticleModel.Items)
     {
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <div class="card h-100 shadow-sm d-flex flex-column">
-                @if (!string.IsNullOrEmpty(article.MainImageUrl))
-                {
-                    <img src="@article.MainImageUrl"
-                         class="card-img-top"
-                         alt="Изображение"
-                         style="height: 180px; object-fit: cover;">
-                }
-                else
-                {
-                    <div class="card-img-top bg-secondary bg-opacity-10"
-                         style="height: 180px;">
-                        <div class="d-flex h-100 align-items-center justify-content-center text-muted">
-                            Няма изображение
-                        </div>
-                    </div>
-                }
-
+            <div class="card h-100 shadow-sm">
+                <img src="@article.MainImageUrl" class="card-img-top" alt="Недостъпно съдържание" style="height: fit-content" />
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title opacity-75 text-uppercase text-center"
-                        title="@article.Title">
-                        @article.Title
-                    </h5>
-                    <p class="card-text text-muted">
-                        @article.Introduction
-                    </p>
+                    <h5 class="card-title opacity-75 text-uppercase text-center" title="@article.Title">@article.Title</h5>
+                    <p class="card-text text-muted">@article.Introduction</p>
                     <p class="text-muted small mt-auto">
                         @article.PublishDate от <strong>@article.Author</strong>
                     </p>
-                    <a asp-action="Details"
-                       asp-controller="Article"
-                       asp-route-id="@article.Id"
-                       class="btn btn-sm btn-outline-primary mt-2">
-                        Прочети
-                    </a>
+                    <a asp-action="Details" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-primary mt-2">Прочети</a>
 
                     @if ((bool)ViewData["IsEditor"])
                     {
                         <div class="row mt-2">
                             <div class="col-6 pe-1">
-                                <a asp-action="Edit"
-                                   asp-controller="Article"
-                                   asp-route-id="@article.Id"
-                                   class="btn btn-sm btn-outline-warning w-100">
-                                    Редактирай
-                                </a>
+                                <a asp-action="Edit" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-warning w-100">Редактирай</a>
                             </div>
                             <div class="col-6 ps-1">
-                                <a asp-action="Delete"
-                                   asp-controller="Article"
-                                   asp-route-id="@article.Id"
-                                   class="btn btn-sm btn-outline-danger w-100">
-                                    Изтрий
-                                </a>
+                                <a asp-action="Delete" asp-controller="Article" asp-route-id="@article.Id" class="btn btn-sm btn-outline-danger w-100">Изтрий</a>
                             </div>
                         </div>
                     }

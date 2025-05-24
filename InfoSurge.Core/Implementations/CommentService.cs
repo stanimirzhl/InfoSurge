@@ -94,5 +94,17 @@ namespace InfoSurge.Core.Implementations
 
             return await PagingModel<CommentDto>.CreateAsync(commentDtos, pageIndex, pageSize);
         }
+
+        public async Task<List<string>> GetAllUsersEmailWhoHaveCommentedUnderArticle(int articleId)
+        {
+            return await repository
+                .All()
+                .Include(x => x.Author)
+                .Where(c => c.ArticleId == articleId)
+                .Where(c => c.Author.Email != null)
+                .Select(c => c.Author.Email)
+                .Distinct()
+                .ToListAsync();
+        }
     }
 }

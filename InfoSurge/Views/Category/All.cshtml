@@ -1,9 +1,6 @@
 ﻿@using InfoSurge.Core
 @using InfoSurge.Data.Models
 @using InfoSurge.Models.Category
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@inject UserManager<User> userManager
 @model PagingModel<CategoryVM>
 @{
     ViewData["Title"] = "Категории";
@@ -29,7 +26,10 @@ else
             <tr>
                 <th>Име</th>
                 <th>Описание</th>
-                <th>Следвай категория</th>
+                @if ((bool)ViewData["IsSignedIn"])
+                {
+                    <th>Следвай категория</th>
+                }
                 @if ((bool)ViewData["IsEditor"])
                 {
                     <th>Бутони за управление</th>
@@ -40,29 +40,33 @@ else
             @if (Model.Items.Any())
             {
 
-                @foreach (var category in Model.Items)
+                @foreach (CategoryVM category in Model.Items)
                 {
                     <tr>
                         <td>@category.Name</td>
                         <td>@category.Description</td>
-                        <td>
-                            <form method="post" asp-action="SubscribeToCategory" asp-controller="Category">
-                                <input type="hidden" name="categoryId" value="@category.Id" />
-                                <button type="submit" class="btn btn-primary">
-                                    @*@if (!user.SubscribedCategories.Contains(category))
+                        @if ((bool)ViewData["IsSignedIn"])
                         {
+                            <td>
+                                <form method="post" asp-action="SubscribeToCategory" asp-controller="Category">
+                                    <input type="hidden" name="categoryId" value="@category.Id" />
+                                    <input type="hidden" name="pageIndex" value="@Model.PageIndex" />
+                                    <button type="submit" class="btn btn-primary">
 
-                        <a><i class="bi bi-plus-circle"></i> Абонирай се</a>
+                                        @if (!category.IsUserSubscribed)
+                                        {
+
+                                            <a><i class="bi bi-plus-circle"></i> Абонирай се</a>
+                                        }
+                                        else
+                                        {
+                                            <a> <i class="bi bi-x-circle"></i> Отбонирай се</a>
+                                        }
+
+                                    </button>
+                                </form>
+                            </td>
                         }
-                        else
-                        {
-                        <a> <i class="bi bi-x-circle"></i> Отбонирай се</a>
-                        }*@
-                                </button>
-                            </form>
-
-
-                        </td>
                         @if ((bool)ViewData["IsEditor"])
                         {
                             <td>
@@ -88,8 +92,8 @@ else
     }
 </div>
 @{
-    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    string prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    string nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 @if (Model.Items.Any())
 {

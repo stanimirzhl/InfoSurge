@@ -2,7 +2,7 @@
 @using InfoSurge.Models.Comment
 @model PagingModel<CommentVM>
 
-@if (Model.TotalCount > 1)
+@if (Model.TotalCount > 0)
 {
     foreach (CommentVM comment in Model.Items)
     {

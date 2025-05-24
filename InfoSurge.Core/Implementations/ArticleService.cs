@@ -174,5 +174,43 @@ namespace InfoSurge.Core.Implementations
                     .ToList()
             };
         }
+
+        public Task<PagingModel<ArticleDto>> GetAllArticlesByCategoryId(int categoryId, int pageIndex, int pageSize, string? searchTerm)
+        {
+            IQueryable<Article> articles = repository
+                .AllAsReadOnly()
+                .Include(x => x.Author)
+                .Include(x => x.ArticleImages)
+                .Include(x => x.CategoryArticles)
+                    .ThenInclude(x => x.Category)
+                .Where(x => x.CategoryArticles.Any(x => x.CategoryId == categoryId))
+                .OrderByDescending(x => x.PublishDate);
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                articles = articles.Where(x => x.Title.ToLower().Contains(searchTerm.ToLower())
+                    || x.Introduction.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            IQueryable<ArticleDto> allMappedArticles = articles
+                .Select(x => new ArticleDto
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Introduction = x.Introduction,
+                    Content = x.Content,
+                    MainImageUrl = x.MainImageUrl,
+                    PublishDate = x.PublishDate,
+                    AuthorName = x.Author == null ? "Изтрит потребител" : (x.Author.FirstName + " " + x.Author.LastName),
+                    AdditionalImages = x.ArticleImages
+                    .Select(i => i.ImgUrl)
+                    .ToList(),
+                    CategoryNames = x.CategoryArticles
+                        .Select(c => c.Category.Name)
+                        .ToList()
+                });
+
+            return PagingModel<ArticleDto>.CreateAsync(allMappedArticles, pageIndex, pageSize);
+        }
     }
 }

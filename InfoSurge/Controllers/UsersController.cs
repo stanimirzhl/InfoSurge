@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace InfoSurge.Controllers
 {
@@ -15,11 +16,13 @@ namespace InfoSurge.Controllers
     {
         private IUserService userService;
         private IAccountService accountService;
+        private IEmailService emailService;
 
-        public UsersController(IUserService userService, IAccountService accountService)
+        public UsersController(IUserService userService, IAccountService accountService, IEmailService emailService)
         {
             this.userService = userService;
             this.accountService = accountService;
+            this.emailService = emailService;
         }
 
         [HttpGet]
@@ -122,7 +125,7 @@ namespace InfoSurge.Controllers
             {
                 User user = await accountService.GetCurrentUserById(id);
 
-                RegisterFormModel formModel = new RegisterFormModel
+                EditUserFormModel formModel = new EditUserFormModel
                 {
                     UserName = user.UserName,
                     Email = user.Email,
@@ -142,28 +145,10 @@ namespace InfoSurge.Controllers
         }
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public async Task<IActionResult> Edit(RegisterFormModel formModel, string id)
+        public async Task<IActionResult> Edit(EditUserFormModel formModel, string id)
         {
             if (!ModelState.IsValid)
             {
-                List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
-                formModel.Roles = roles;
-                formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
-                return View(formModel);
-            }
-
-            if (await accountService.UserNameExists(formModel.UserName))
-            {
-                ModelState.AddModelError(string.Empty, "Потребител с това име вече съществува!");
-                List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
-                formModel.Roles = roles;
-                formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
-                return View(formModel);
-            }
-
-            if (await accountService.EmailExists(formModel.Email))
-            {
-                ModelState.AddModelError(string.Empty, "Потребител с този имейл вече съществува!");
                 List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
                 formModel.Roles = roles;
                 formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
@@ -174,7 +159,28 @@ namespace InfoSurge.Controllers
             {
                 User user = await accountService.GetCurrentUserById(id);
 
-                await userService.ChangeUserPassword(user, formModel.Password);
+                if (await accountService.UserNameExists(formModel.UserName) && user.UserName != formModel.UserName)
+                {
+                    ModelState.AddModelError(string.Empty, "Потребител с това име вече съществува!");
+                    List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
+                    formModel.Roles = roles;
+                    formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
+                    return View(formModel);
+                }
+
+                if (await accountService.EmailExists(formModel.Email) && user.Email != formModel.Email)
+                {
+                    ModelState.AddModelError(string.Empty, "Потребител с този имейл вече съществува!");
+                    List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
+                    formModel.Roles = roles;
+                    formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
+                    return View(formModel);
+                }
+
+                if (!string.IsNullOrEmpty(formModel.Password))
+                {
+                    await userService.ChangeUserPassword(user, formModel.Password);
+                }
 
                 IdentityResult result = await accountService.UpdateProfile(id, formModel.UserName, formModel.FirstName, formModel.LastName, formModel.Email);
 
@@ -189,9 +195,28 @@ namespace InfoSurge.Controllers
 
                     foreach (string role in rolesToAdd)
                     {
-                        await userService.AddRoleToUser(user, role);
+                        string roleName = await userService.GetRoleNameById(role);
+
+                        await userService.AddRoleToUser(user, roleName);
                     }
                     await userService.RemoveRolesFromUser(user, rolesToRemove);
+
+                    TempData["SuccessfulUpdate"] = "Успешно обновихте потребителските данни!";
+
+                    string subject = "Вашите данни бяха променени";
+                    string message = $@"
+                    <p>Здравейте, вашите данни бяха редактирани от нашите администратори, долу ще се появят новите ви данни за вход.</p>
+                    <p><strong>Потребителско име:</strong> {user.UserName}</p>
+                    <p><strong>Име:</strong> {user.FirstName}.</p>
+                    <p><strong>Фамилия:</strong> {user.LastName}.</p>
+                    <p><strong>Електронна поща:</strong> {user.Email}.</p>";
+
+                    if (!string.IsNullOrEmpty(formModel.Password))
+                    {
+                        message += $"<p><strong>Парола:</strong> {formModel.Password}.</p>";
+                    }
+
+                    await emailService.SendEmailAsync(user.Email, subject, message);
                 }
                 return RedirectToAction("All");
             }
@@ -231,6 +256,19 @@ namespace InfoSurge.Controllers
 
                 await accountService.AddUserRole(user);
 
+                string subject = "Вие бяхте одобрени";
+                string message = $@"
+                <h2>Поздравления!</h2>
+                <p>Вашето заявление за участие в нашата платформа беше прието.</p>
+                <p><strong>Потребителско име:</strong> {user.UserName}</p>
+                <p><strong>Име:</strong> {user.FirstName}.</p>
+                <p><strong>Фамилия:</strong> {user.LastName}.</p>
+                <p><strong>Парола:</strong> Използвайте създадената от вас парола, за да влезете в акаунта си.</p>
+                <p>Вече имате възможността да добавяте коментари, реагирате на новини и да се абонирате за избрани от вас категории.</p>
+                ";
+
+                await emailService.SendEmailAsync(user.Email, subject, message);
+
                 return RedirectToAction("All");
             }
             catch (NoEntityException ex)
@@ -246,6 +284,15 @@ namespace InfoSurge.Controllers
             try
             {
                 User user = await accountService.GetCurrentUserById(userId);
+
+                string subject = "Вие не бяхте одобрени";
+                string message = $@"
+                <p>За съжаление вашето заявление за участие в нашата платформа беше отхвърлено.</p>
+                <p><strong>Потребителско име:</strong> {user.UserName}</p>
+                <p><strong>Име:</strong> {user.FirstName}.</p>
+                <p><strong>Фамилия:</strong> {user.LastName}.</p>
+                ";
+                await emailService.SendEmailAsync(user.Email, subject, message);
 
                 await accountService.Delete(user);
 

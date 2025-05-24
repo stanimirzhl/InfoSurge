@@ -12,10 +12,10 @@
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Моят профил</a></li>
-                    @*@if (User.IsInRole("Moderator"))
-                {
-                <li><a class="dropdown-item" asp-controller="Comments" asp-action="Index">Коментари</a></li>
-                }*@
+                    @if (User.IsInRole("Moderator"))
+                    {
+                        <li><a class="dropdown-item" asp-controller="Comment" asp-action="All">Коментари</a></li>
+                    }
                     <li><a class="dropdown-item" asp-controller="Category" asp-action="All">Категории</a></li>
                     <li><a class="dropdown-item" asp-controller="Users" asp-action="All">Потребители</a></li>
                     <li>
@@ -58,4 +58,3 @@
         </li>
     }
 </ul>
-                        
