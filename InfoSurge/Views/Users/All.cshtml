@@ -40,15 +40,22 @@ else
                         <td>@user.FirstName</td>
                         <td>@user.LastName</td>
                         <td>
-                            @foreach (string role in user.Roles)
+                            @if(user.Status == 0)
                             {
-                                <span class="badge bg-info me-1">@role</span>
+                                <p class="badge bg-warning me-1">Изчаква одобрение</p>
+                            }
+                            else
+                            {
+                                @foreach (string role in user.Roles)
+                                {
+                                    <span class="badge bg-info me-1">@role</span>
+                                }
                             }
                         </td>
 
                         @if ((bool)ViewData["IsAdmin"])
                         {
-                            @if (user.Status == 0 && !user.IsUserInRole)
+                            @if (user.Status == 0 || !user.IsUserInRole)
                             {
                                 <td>
                                     <div class="d-flex justify-content-end gap-2">

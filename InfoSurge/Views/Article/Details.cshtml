@@ -37,12 +37,39 @@
                 {
                     <form asp-action="LikeUnLike" asp-controller="React" method="post" class="me-3">
                         <input type="hidden" name="articleId" value="@Model.Article.Id" />
-                        <button type="submit" name="isLike" value="true" class="btn btn-sm btn-outline-success me-1" @(Model.Article.UserReaction == true ? "disabled" : "")>
-                            👍 @Model.Article.LikeDislikeCount.Item1
-                        </button>
-                        <button type="submit" name="isLike" value="false" class="btn btn-sm btn-outline-danger" @(Model.Article.UserReaction == false ? "disabled" : "")>
-                            👎 @Model.Article.LikeDislikeCount.Item2
-                        </button>
+
+                        @if (Model.Article.UserReaction == true)
+                        {
+                            <button type="submit" name="isLike" value="true" class="btn btn-sm btn-outline-success me-1">
+                                👍 @Model.Article.LikeDislikeCount.Item1
+                            </button>
+
+                            <button type="submit" name="isLike" value="false" class="btn btn-sm btn-outline-danger">
+                                👎 @Model.Article.LikeDislikeCount.Item2
+                            </button>
+                        }
+
+                        @if (Model.Article.UserReaction == false)
+                        {
+                            <button type="submit" name="isLike" value="true" class="btn btn-sm btn-outline-success me-1" >
+                                👍 @Model.Article.LikeDislikeCount.Item1
+                            </button>
+
+                            <button type="submit" name="isLike" value="false" class="btn btn-sm btn-outline-danger" >
+                                👎 @Model.Article.LikeDislikeCount.Item2
+                            </button>
+                        }
+
+                        @if(Model.Article.UserReaction == null)
+                        {
+                            <button type="submit" name="isLike" value="true" class="btn btn-sm btn-outline-success me-1" @(Model.Article.UserReaction == true ? "disabled" : "")>
+                                👍 @Model.Article.LikeDislikeCount.Item1
+                            </button>
+
+                            <button type="submit" name="isLike" value="false" class="btn btn-sm btn-outline-danger" @(Model.Article.UserReaction == false ? "disabled" : "")>
+                                👎 @Model.Article.LikeDislikeCount.Item2
+                            </button>   
+                        }
                     </form>
                 }
                 else

@@ -17,5 +17,7 @@ namespace InfoSurge.Core.Interfaces
         Task AddAsync(string userId, int articleId, bool isLike);
 
         Task ChangeReaction(string userId, int articleId, bool isLike);
+
+        Task Remove(string userId, int articleId);
     }
 }

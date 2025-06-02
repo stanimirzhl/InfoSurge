@@ -24,11 +24,18 @@ namespace InfoSurge.Controllers
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            bool hasUserReacted = await reactService.HasUserReactedToArticle(userId, articleId);
+            bool? currentReaction = await reactService.GetUserReactionToArticle(userId, articleId);
 
-            if (hasUserReacted == true)
+            if (currentReaction.HasValue)
             {
-               await reactService.ChangeReaction(userId, articleId, isLike);
+                if (currentReaction.Value == isLike)
+                {
+                    await reactService.Remove(userId, articleId);
+                }
+                else
+                {
+                    await reactService.ChangeReaction(userId, articleId, isLike);
+                }
             }
             else
             {

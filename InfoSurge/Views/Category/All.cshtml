@@ -28,7 +28,7 @@ else
                 <th>Описание</th>
                 @if ((bool)ViewData["IsSignedIn"])
                 {
-                    <th>Следвай категория</th>
+                    <th>Абонирайте се за категория, за да получавате известия за нови статии.</th>
                 }
                 @if ((bool)ViewData["IsEditor"])
                 {
@@ -47,7 +47,7 @@ else
                         <td>@category.Description</td>
                         @if ((bool)ViewData["IsSignedIn"])
                         {
-                            <td>
+                            <td class="d-flex justify-content-evenly">
                                 <form method="post" asp-action="SubscribeToCategory" asp-controller="Category">
                                     <input type="hidden" name="categoryId" value="@category.Id" />
                                     <input type="hidden" name="pageIndex" value="@Model.PageIndex" />
@@ -82,15 +82,6 @@ else
 
     </table>
 }
-<div class="container-md">
-    @if ((bool)ViewData["IsEditor"])
-    {
-        <a asp-controller="Category" asp-action="Add" class="btn btn-outline-success add-btn">
-
-            <i class="bi bi-plus-circle"></i> Добави категория
-        </a>
-    }
-</div>
 @{
     string prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     string nextDisabled = !Model.HasNextPage ? "disabled" : "";
@@ -110,7 +101,35 @@ else
     </div>
 }
 
-<div class="mt-4">
-    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Върни се обратно</a>
-</div>
+@if (!Model.Items.Any())
+{
+    <div class="container-md mt-4 d-flex justify-content-center">
+        <div class="btn-group">
+            @if ((bool)ViewData["IsEditor"])
+            {
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                    Върни се обратно
+                </a>
+            }
+            <a asp-controller="Category" asp-action="Add" class="btn btn-outline-success btn-lg">
+                <i class="bi bi-plus-circle me-1"></i> Добави Категория
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container-md mt-4 d-flex justify-content-between">
+        @if ((bool)ViewData["IsEditor"])
+        {
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                Върни се обратно
+            </a>
+        }
+        <a asp-controller="Category" asp-action="Add" class="btn btn-outline-success">
+            <i class="bi bi-plus-circle me-1"></i> Добави Категория
+        </a>
+    </div>
+}
+
 

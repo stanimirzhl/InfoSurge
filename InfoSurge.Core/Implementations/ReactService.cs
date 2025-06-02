@@ -64,7 +64,7 @@ namespace InfoSurge.Core.Implementations
             Reaction reaction = await repository.All()
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.ArticleId == articleId);
 
-            if(reaction == null)
+            if (reaction == null)
             {
                 return null;
             }
@@ -93,6 +93,14 @@ namespace InfoSurge.Core.Implementations
             reaction.IsLike = isLike;
 
             await repository.SaveChangesAsync();
+        }
+
+        public async Task Remove(string userId, int articleId)
+        {
+            Reaction reaction = await repository.All()
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.ArticleId == articleId);
+
+            await repository.DeleteAsync(reaction.Id);
         }
     }
 }
