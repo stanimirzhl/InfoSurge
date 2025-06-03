@@ -4,6 +4,7 @@ using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Category;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers
@@ -13,14 +14,17 @@ namespace InfoSurge.Controllers
         private ICategoryService categoryService;
         private IAccountService accountService;
         private ICategoryUserService categoryUserService;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
         public CategoryController(ICategoryService brandService,
             IAccountService accountService,
-            ICategoryUserService categoryUserService)
+            ICategoryUserService categoryUserService,
+            IStringLocalizer<SharedResources> localizer)
         {
             this.categoryService = brandService;
             this.accountService = accountService;
             this.categoryUserService = categoryUserService;
+            this.localizer = localizer;
         }
 
         [HttpGet]
@@ -180,7 +184,7 @@ namespace InfoSurge.Controllers
             if (!isSubscribed)
             {
                 await categoryUserService.Subscribe(categoryId, userId);
-                TempData["Success"] = "Успешно се абонирахте за категорията.";
+                TempData["Success"] = localizer["Subscribed"].Value;
             }
             else
             {
@@ -192,7 +196,7 @@ namespace InfoSurge.Controllers
                 {
                     return BadRequest();
                 }
-                TempData["Success"] = "Успешно се отбонирахте от категорията.";
+                TempData["Success"] = localizer["Unsubscribed"].Value;
             }
 
             return RedirectToAction("All", new { pageIndex });

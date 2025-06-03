@@ -7,6 +7,7 @@ using InfoSurge.Models.Article;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers
@@ -15,11 +16,15 @@ namespace InfoSurge.Controllers
     {
         private readonly IAccountService accountService;
         private readonly ISavedArticleService savedArticleService;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
-        public AccountController(IAccountService accountService, ISavedArticleService savedArticleService)
+        public AccountController(IAccountService accountService,
+            ISavedArticleService savedArticleService, 
+            IStringLocalizer<SharedResources> localizer)
         {
             this.accountService = accountService;
             this.savedArticleService = savedArticleService;
+            this.localizer = localizer;
         }
 
         public IActionResult AccessDenied()
@@ -72,7 +77,8 @@ namespace InfoSurge.Controllers
                 return View(formModel);
             }
 
-            TempData["Register"] = "Регистрацията ви ще бъде разгледана от нашите администратори и ще получите имейл на дадената електронна поща ако сте били одобрени!";
+             string message = localizer["Register"].Name;
+            TempData["Register"] = message;
             return RedirectToAction("Index", "Home");
         }
 
@@ -226,7 +232,7 @@ namespace InfoSurge.Controllers
                 {
                     await accountService.SignInAgain(user);
 
-                    TempData["Success"] = "Профилът е успешно обновен!";
+                    TempData["Success"] = localizer["ProfileUpdated"].Value;
                 }
                 else
                 {
@@ -265,7 +271,7 @@ namespace InfoSurge.Controllers
 
                 if (isPasswordValid)
                 {
-                    TempData["Error"] = "Неуспешно променяне на данните, паролата е невалидна!";
+                    TempData["Error"] = localizer["PasswordInvalid"].Value;
                     return RedirectToAction("Profile", new { section = "changePassword" });
                 }
 
@@ -275,7 +281,7 @@ namespace InfoSurge.Controllers
                 {
                     await accountService.SignInAgain(user);
 
-                    TempData["Success"] = "Паролата е успешно обновена!";
+                    TempData["Success"] = localizer["PasswordUpdated"].Value;
 
                     return RedirectToAction("Profile", new { section = "changePassword" });
 

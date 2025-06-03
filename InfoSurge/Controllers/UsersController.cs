@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 
 namespace InfoSurge.Controllers
 {
@@ -16,12 +17,15 @@ namespace InfoSurge.Controllers
         private IUserService userService;
         private IAccountService accountService;
         private IEmailService emailService;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
-        public UsersController(IUserService userService, IAccountService accountService, IEmailService emailService)
+        public UsersController(IUserService userService, IAccountService accountService, IEmailService emailService,
+            IStringLocalizer<SharedResources> localizer)
         {
             this.userService = userService;
             this.accountService = accountService;
             this.emailService = emailService;
+            this.localizer = localizer;
         }
 
         [HttpGet]
@@ -200,7 +204,7 @@ namespace InfoSurge.Controllers
                     }
                     await userService.RemoveRolesFromUser(user, rolesToRemove);
 
-                    TempData["SuccessfulUpdate"] = "Успешно обновихте потребителските данни!";
+                    TempData["SuccessfulUpdate"] = localizer["UserUpdated"].Value;
 
                     string subject = "Вашите данни бяха променени";
                     string message = $@"

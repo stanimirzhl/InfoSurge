@@ -123,10 +123,19 @@ namespace InfoSurge.Extensions
             if (!db.Categories.Any())
             {
                 List<Category> categories = new List<Category>
-            {
-                new Category { Name = "Спорт", Description = "Последните новини за спортни събития и отбори." },
-                new Category { Name = "Култура", Description = "Всичко за културата." }
-            };
+                {
+                    new Category { Name = "Спорт", Description = "Последните новини за спортни събития и отбори." },
+                    new Category { Name = "Култура", Description = "Всичко за културата." }
+                };
+
+                for (int i = 3; i <= 98; i++)
+                {
+                    categories.Add(new Category
+                    {
+                        Name = $"Категория-test {i}",
+                        Description = $"Описание за категория-test {i}."
+                    });
+                }
 
                 db.Categories.AddRange(categories);
                 await db.SaveChangesAsync();
@@ -135,6 +144,22 @@ namespace InfoSurge.Extensions
             if (!db.Articles.Any())
             {
                 Category firstCategory = db.Categories.First();
+
+                List<Article> articles = new List<Article>();
+
+                for (int i = 2; i <= 25; i++)
+                {
+                    articles.Add(new Article
+                    {
+                        Title = $"Статия-test {i}",
+                        Introduction = $"Въведение в статия-test {i}.",
+                        Content = $"Съдържание на статия-test {i}. Тук ще намерите информация за тестовата статия {i}.",
+                        MainImageUrl = $"/infosurge logo.png"
+                    });
+                }
+
+                await db.Articles.AddRangeAsync(articles);
+
 
                 Article article = new Article
                 {
@@ -153,13 +178,33 @@ namespace InfoSurge.Extensions
                 };
 
                 db.Articles.Add(article);
+
                 await db.SaveChangesAsync();
 
-                db.CategoryArticles.Add(new CategoryArticle
+                List<CategoryArticle> categoryArticles = new List<CategoryArticle>()
                 {
-                    ArticleId = article.Id,
-                    CategoryId = firstCategory.Id
-                });
+                    new CategoryArticle
+                    {
+                        ArticleId = article.Id,
+                        CategoryId = firstCategory.Id
+                    }
+                };
+
+                List<int> evenArticleIds = await db.Articles
+                    .Where(a => a.Id % 2 == 0)
+                    .Select(a => a.Id)
+                    .ToListAsync();
+
+                categoryArticles.AddRange(evenArticleIds.Select(x => 
+                    new CategoryArticle
+                    {
+                        ArticleId = x,
+                        CategoryId = new Random().Next(1, 99)
+                    })
+                    .ToList()
+                );
+
+                db.CategoryArticles.AddRange(categoryArticles);
 
                 db.CategoryArticles.Add(new CategoryArticle
                 {
@@ -173,14 +218,38 @@ namespace InfoSurge.Extensions
                     ImgUrl = "/ArticleImageFolders/Article-1-Images/AdditionalImages/carlos.jpg"
                 });
 
-                db.Comments.Add(new Comment
+                List<Comment> comments = new List<Comment>()
                 {
-                    ArticleId = article.Id,
-                    Title = "Коментар 1",
-                    Content = "Тест, тест, тест, тест",
-                    AuthorId = adminUser.Id,
-                    Status = CommentStatus.Approved
-                });
+                    new Comment
+                    {
+                        ArticleId = article.Id,
+                        Title = "Коментар 1",
+                        Content = "Тест, тест, тест, тест",
+                        AuthorId = adminUser.Id,
+                        Status = CommentStatus.Approved
+                    }
+                };
+
+                for (int i = 2; i <= 99; i++)
+                {
+                    Comment comment = new Comment()
+                    {
+                        ArticleId = article.Id,
+                        Title = $"Коментар-test {i}",
+                        Content = $"Тест-тест-тест-тест {i}",
+                        AuthorId = adminUser.Id,
+                        Status = CommentStatus.Approved
+                    };
+
+                    if (i == 98)
+                    {
+                        comment.Status = CommentStatus.Pending;
+                    }
+
+                    comments.Add(comment);
+                }
+
+                db.Comments.AddRange(comments);
 
                 db.Reactions.Add(new Reaction
                 {

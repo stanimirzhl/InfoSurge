@@ -24,15 +24,15 @@ else
         <thead>
 
             <tr>
-                <th>Име</th>
-                <th>Описание</th>
+                <th class="align-content-center">Име</th>
+                <th class="align-content-center">Описание</th>
                 @if ((bool)ViewData["IsSignedIn"])
                 {
                     <th>Абонирайте се за категория, за да получавате известия за нови статии.</th>
                 }
                 @if ((bool)ViewData["IsEditor"])
                 {
-                    <th>Бутони за управление</th>
+                    <th class="align-content-center">Бутони за управление</th>
                 }
             </tr>
         </thead>

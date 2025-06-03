@@ -1,8 +1,6 @@
 ﻿@using InfoSurge.Models.Comment
 @model CommentFormModel
 
-@*if (SignInManager.IsSignedIn(User))
-{*@
 <form asp-action="AddComment" asp-controller="Comment" method="post">
     <input type="hidden" name="articleId" value="@Model.ArticleId" />
     <div class="form-group mb-3">
@@ -17,12 +15,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Публикувай</button>
 </form>
-@*}*@
-@*else
-{
-    <p>За да оставите коментар, трябва да сте влезли в профила си.</p>
-    <a href="@Url.Action("Login", "Account", new { ReturnUrl = Url.Action("Details", "News", new { id = Model }) })" class="btn btn-primary">Влез</a>
-}*@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

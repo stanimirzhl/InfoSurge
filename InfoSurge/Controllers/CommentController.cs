@@ -5,6 +5,7 @@ using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers
@@ -14,12 +15,15 @@ namespace InfoSurge.Controllers
         private ICommentService commentService;
         private IArticleService articleService;
         private IEmailService emailService;
+        private readonly IStringLocalizer<SharedResources> localizer;
 
-        public CommentController(ICommentService commentService, IArticleService articleService, IEmailService emailService)
+        public CommentController(ICommentService commentService, IArticleService articleService, IEmailService emailService,
+            IStringLocalizer<SharedResources> localizer)
         {
             this.commentService = commentService;
             this.articleService = articleService;
             this.emailService = emailService;
+            this.localizer = localizer;
         }
 
         [HttpGet]
@@ -67,7 +71,7 @@ namespace InfoSurge.Controllers
             {
                 return NotFound();
             }
-            TempData["AddedComment"] = "Коментарът ви е изпратен за проверка от нашите модератори";
+            TempData["AddedComment"] = localizer["CommentSent"].Value;
             return RedirectToAction("Details", "Article", new { id = articleId });
         }
 
