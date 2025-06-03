@@ -38,22 +38,24 @@
                                         Категории
                                     </button>
                                     <ul class="dropdown-menu">
-                                        @if (!categories.Any())
-                                        {
-                                            <li>
-                                                <div class="col-12">
-                                                    <div class="alert alert-warning text-center">
-                                                        Няма Категории.
-                                                    </div>
+                                        <div class="p-2">
+                                            @if (!categories.Any())
+                                            {
+                                                <div class="alert alert-warning text-center mb-0">
+                                                    Няма Категории.
                                                 </div>
-                                            </li>
-                                        }
-                                        @foreach (CategoryDto category in categories)
-                                        {
-                                            <li class="nav-item">
-                                                <a class="dropdown-item" asp-controller="Home" asp-action="Details" asp-route-id="@category.Id">@category.Name</a>
-                                            </li>
-                                        }
+                                            }
+                                            else
+                                            {
+                                                <select id="categorySelect" class="form-select w-auto bg-primary-subtle">
+                                                    <option value="">Изберете категория:</option>
+                                                    @foreach (var category in categories)
+                                                    {
+                                                        <option value="@category.Id">@category.Name</option>
+                                                    }
+                                                </select>
+                                            }
+                                        </div>
                                     </ul>
                                 </div>
                             </div>
@@ -81,3 +83,22 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@section Scripts{
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#categorySelect').select2({
+                width: 'resolve'
+            });
+
+            $('#categorySelect').on('select2:selecting', function (e) {
+                var selected = e.params.args.data.id;
+                window.location.href = '/Home/Details/' + selected;
+                e.preventDefault();
+            });
+        });
+    </script>
+}
+
