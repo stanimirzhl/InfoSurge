@@ -3,11 +3,6 @@ using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfoSurge.Core.Implementations
 {
@@ -42,7 +37,7 @@ namespace InfoSurge.Core.Implementations
 
         public async Task<List<ArticleDto>> GetSavedArticlesByUserId(string userId)
         {
-            if(string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(userId))
             {
                 throw new NoEntityException("Потребителят не е в системата!");
             }

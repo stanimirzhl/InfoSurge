@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.CategoryConstants;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfoSurge.Data.Models
 {

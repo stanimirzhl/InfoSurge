@@ -1,6 +1,5 @@
 using InfoSurge.Core;
 using InfoSurge.Core.DTOs.Article;
-using InfoSurge.Core.Implementations;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Models;
 using InfoSurge.Models.Article;

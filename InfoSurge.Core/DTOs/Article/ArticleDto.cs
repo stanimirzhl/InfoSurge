@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InfoSurge.Core.DTOs.Article
+﻿namespace InfoSurge.Core.DTOs.Article
 {
     public class ArticleDto
     {

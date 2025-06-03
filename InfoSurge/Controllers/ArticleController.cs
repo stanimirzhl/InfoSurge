@@ -1,18 +1,11 @@
 ﻿using InfoSurge.Core;
 using InfoSurge.Core.DTOs.Article;
-using InfoSurge.Core.DTOs.Category;
 using InfoSurge.Core.DTOs.Comment;
-using InfoSurge.Core.Implementations;
 using InfoSurge.Core.Interfaces;
-using InfoSurge.Data.Models;
 using InfoSurge.Models.Article;
-using InfoSurge.Models.Category;
 using InfoSurge.Models.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using System.ComponentModel;
-using System.Diagnostics.Metrics;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers

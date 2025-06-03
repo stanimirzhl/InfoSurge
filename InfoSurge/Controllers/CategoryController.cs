@@ -1,12 +1,9 @@
 ﻿using InfoSurge.Core;
 using InfoSurge.Core.DTOs.Category;
 using InfoSurge.Core.Interfaces;
-using InfoSurge.Data.Models;
 using InfoSurge.Models.Category;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers
@@ -17,7 +14,7 @@ namespace InfoSurge.Controllers
         private IAccountService accountService;
         private ICategoryUserService categoryUserService;
 
-        public CategoryController(ICategoryService brandService, 
+        public CategoryController(ICategoryService brandService,
             IAccountService accountService,
             ICategoryUserService categoryUserService)
         {

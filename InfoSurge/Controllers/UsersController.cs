@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace InfoSurge.Controllers
 {
@@ -238,9 +237,9 @@ namespace InfoSurge.Controllers
 
                 return RedirectToAction("All");
             }
-            catch(NoEntityException ex)
+            catch (NoEntityException ex)
             {
-               return BadRequest();
+                return BadRequest();
             }
         }
 

@@ -5,8 +5,6 @@ using InfoSurge.Core.Interfaces;
 using InfoSurge.Models.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers

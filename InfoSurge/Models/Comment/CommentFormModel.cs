@@ -12,7 +12,7 @@ namespace InfoSurge.Models.Comment
         public string Title { get; set; }
 
         [Required(ErrorMessage = CommentContentRequiredErrorMessage)]
-        [StringLength(CommentContentMaxLength, 
+        [StringLength(CommentContentMaxLength,
             MinimumLength = CommentContentMinLength,
             ErrorMessage = CommentContentLengthMessage)]
         public string Content { get; set; }

@@ -4,12 +4,6 @@ using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfoSurge.Core.Implementations
 {

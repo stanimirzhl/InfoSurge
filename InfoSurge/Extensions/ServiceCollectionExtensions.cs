@@ -7,8 +7,6 @@ using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using static InfoSurge.Data.Constants.DataConstants.CommentConstants;
 using static InfoSurge.Data.Constants.DataConstants.UserConstants;
 

@@ -7,10 +7,6 @@ using InfoSurge.Models.Article;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using NuGet.Configuration;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers
@@ -323,7 +319,7 @@ namespace InfoSurge.Controllers
 
                 return PartialView("_SavedArticlesPartial", formModel);
             }
-            catch(NoEntityException ex)
+            catch (NoEntityException ex)
             {
                 return Unauthorized();
             }

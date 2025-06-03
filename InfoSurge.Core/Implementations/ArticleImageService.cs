@@ -3,12 +3,6 @@ using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfoSurge.Core.Implementations
 {
@@ -77,7 +71,7 @@ namespace InfoSurge.Core.Implementations
                 .All()
                 .Where(x => oldImagesIds.Contains(x.Id));
 
-             await repository.RemoveRange(articleImages);
+            await repository.RemoveRange(articleImages);
         }
 
         public async Task<List<ArticleImageDto>> GetAllImagePathsById(int articleId)
@@ -85,7 +79,7 @@ namespace InfoSurge.Core.Implementations
             return await repository
                 .AllAsReadOnly()
                 .Where(x => x.ArticleId == articleId)
-                .Select(x => new ArticleImageDto 
+                .Select(x => new ArticleImageDto
                 {
                     Id = x.Id,
                     ImagePath = x.ImgUrl

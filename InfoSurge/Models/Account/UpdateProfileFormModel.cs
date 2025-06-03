@@ -7,7 +7,7 @@ namespace InfoSurge.Models.Account
     {
         [Required(ErrorMessage = UserNameRequiredErrorMessage)]
         [StringLength(UserNameMaxLength,
-            MinimumLength = UserNameMinLength, 
+            MinimumLength = UserNameMinLength,
             ErrorMessage = UserNameLengthMessage)]
         public string UserName { get; set; }
 

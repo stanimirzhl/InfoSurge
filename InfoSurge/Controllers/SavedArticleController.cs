@@ -1,9 +1,6 @@
 ﻿using InfoSurge.Core.Interfaces;
-using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers
@@ -28,11 +25,11 @@ namespace InfoSurge.Controllers
             if (await savedArticleService.HasUserSavedThisArticle(currentUserId, articleId))
             {
                 await savedArticleService.Remove(currentUserId, articleId);
-                return RedirectToAction("Details","Article" ,new { id = articleId });
+                return RedirectToAction("Details", "Article", new { id = articleId });
             }
 
             await savedArticleService.AddAsync(currentUserId, articleId);
-            return RedirectToAction("Details","Article", new { id = articleId });
+            return RedirectToAction("Details", "Article", new { id = articleId });
         }
     }
 }

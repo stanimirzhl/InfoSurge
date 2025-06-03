@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace InfoSurge.Models.Article
+﻿namespace InfoSurge.Models.Article
 {
     public class ArticleVM
     {

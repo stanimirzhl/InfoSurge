@@ -1,15 +1,9 @@
 ﻿using InfoSurge.Core.DTOs.User;
 using InfoSurge.Core.Interfaces;
-using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InfoSurge.Core.Implementations
 {

@@ -2,14 +2,8 @@
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Common;
 using InfoSurge.Data.Models;
-using static InfoSurge.Data.Constants.DataConstants.CommentConstants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using static InfoSurge.Data.Constants.DataConstants.CommentConstants;
 
 namespace InfoSurge.Core.Implementations
 {

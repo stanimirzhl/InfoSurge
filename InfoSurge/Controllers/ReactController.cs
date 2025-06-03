@@ -1,8 +1,6 @@
 ﻿using InfoSurge.Core.Interfaces;
-using InfoSurge.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers

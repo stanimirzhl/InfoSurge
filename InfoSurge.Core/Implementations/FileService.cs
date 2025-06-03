@@ -1,15 +1,6 @@
 ﻿using InfoSurge.Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Hosting.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace InfoSurge.Core.Implementations
 {
@@ -78,7 +69,7 @@ namespace InfoSurge.Core.Implementations
 
             string tempFilePath = Path.Combine(mainImageTempDirectory, fileName);
 
-            using(FileStream stream = new FileStream(tempFilePath, FileMode.Create))
+            using (FileStream stream = new FileStream(tempFilePath, FileMode.Create))
             {
                 await mainImage.CopyToAsync(stream);
             }
@@ -141,7 +132,7 @@ namespace InfoSurge.Core.Implementations
                     await mainImage.CopyToAsync(stream);
                 }
 
-                mainImageNewPath = $"/{Path.Combine("ArticleImageFolders",$"Article-{articleId}-Images", "MainImage", fileName).Replace("\\", "/")}";
+                mainImageNewPath = $"/{Path.Combine("ArticleImageFolders", $"Article-{articleId}-Images", "MainImage", fileName).Replace("\\", "/")}";
             }
             string additionalImagesFolder = Path.Combine(articleFolder, "AdditionalImages");
 
@@ -173,7 +164,7 @@ namespace InfoSurge.Core.Implementations
         public async Task DeleteImages(int articleId, List<string> oldAdditionalImages, string oldMainImage = null)
         {
 
-            if(oldMainImage is not null)
+            if (oldMainImage is not null)
             {
                 string mainImageFolder = $"{environment.WebRootPath}{oldMainImage}";
 
@@ -183,7 +174,7 @@ namespace InfoSurge.Core.Implementations
                 }
             }
 
-            if (oldAdditionalImages.Count > 0) 
+            if (oldAdditionalImages.Count > 0)
             {
                 foreach (string image in oldAdditionalImages)
                 {
