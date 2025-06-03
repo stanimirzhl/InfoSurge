@@ -12,7 +12,7 @@ builder.Services.AddIdentityServices();
 builder.Services.AddAccountOptions();
 
 
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources/SharedResources");
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddControllersWithViews()
     .AddViewLocalization()

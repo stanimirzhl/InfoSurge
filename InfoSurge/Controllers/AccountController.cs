@@ -77,7 +77,7 @@ namespace InfoSurge.Controllers
                 return View(formModel);
             }
 
-             string message = localizer["Register"].Name;
+            string message = localizer["Register"].Value;
             TempData["Register"] = message;
             return RedirectToAction("Index", "Home");
         }
