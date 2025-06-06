@@ -1,13 +1,13 @@
 ﻿namespace InfoSurge.Models.Category
 {
-    public class CategoryVM
-    {
-        public int Id { get; set; }
+	public class CategoryVM
+	{
+		public int Id { get; set; }
 
-        public string Name { get; set; }
+		public string Name { get; set; }
 
-        public string Description { get; set; }
+		public string Description { get; set; }
 
-        public bool IsUserSubscribed { get; set; }
-    }
+		public bool IsUserSubscribed { get; set; }
+	}
 }

@@ -44,6 +44,10 @@ else
                             {
                                 <p class="badge bg-warning me-1">Изчаква одобрение</p>
                             }
+                            else if(!user.Roles.Any())
+                            {
+                                <p class="badge bg-primary me-1">Потребителят няма роли</p>
+                            }
                             else
                             {
                                 @foreach (string role in user.Roles)
@@ -55,7 +59,7 @@ else
 
                         @if ((bool)ViewData["IsAdmin"])
                         {
-                            @if (user.Status == 0 || !user.IsUserInRole)
+                            @if (user.Status == 0 && !user.IsUserInRole)
                             {
                                 <td>
                                     <div class="d-flex justify-content-end gap-2">

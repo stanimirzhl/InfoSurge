@@ -15,29 +15,29 @@ builder.Services.AddAccountOptions();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddControllersWithViews()
-    .AddViewLocalization()
-    .AddDataAnnotationsLocalization();
+	.AddViewLocalization()
+	.AddDataAnnotationsLocalization();
 
 var app = builder.Build();
 
 CultureInfo[] supportedCultures = new[]
 {
-    new CultureInfo("bg-BG")
+	new CultureInfo("bg-BG")
 };
 
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
-    DefaultRequestCulture = new RequestCulture("bg-BG"),
-    SupportedCultures = supportedCultures,
-    SupportedUICultures = supportedCultures
+	DefaultRequestCulture = new RequestCulture("bg-BG"),
+	SupportedCultures = supportedCultures,
+	SupportedUICultures = supportedCultures
 });
 
 await app.ApplyDatabaseMigrations();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+	app.UseExceptionHandler("/Home/Error");
+	app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -48,7 +48,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+	name: "default",
+	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

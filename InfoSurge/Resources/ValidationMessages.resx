@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ArticleContentLengthMessage" xml:space="preserve">
+    <value>Дължината на въведението на новината трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="ArticleContentRequiredErrorMessage" xml:space="preserve">
+    <value>Въведението на новината е задължително!</value>
+  </data>
+  <data name="ArticleIntroductionLengthMessage" xml:space="preserve">
+    <value>Дължината на въведението на новината трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="ArticleIntroductionRequiredErrorMessage" xml:space="preserve">
+    <value>Въведението на новината е задължително!</value>
+  </data>
+  <data name="ArticleMainImageErrorMessage" xml:space="preserve">
+    <value>Основното изображение е задължително!</value>
+  </data>
+  <data name="ArticleTitleLengthMessage" xml:space="preserve">
+    <value>Дължината на заглавието на новината трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="ArticleTitleRequiredErrorMessage" xml:space="preserve">
+    <value>Заглавието на новината е задължително!</value>
+  </data>
+  <data name="CategoryDescriptionLengthMessage" xml:space="preserve">
+    <value>Дължината на описанието на категория трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="CategoryDescriptionRequiredErrorMessage" xml:space="preserve">
+    <value>Описанието на категорията е задължително!</value>
+  </data>
+  <data name="CategoryNameLengthMessage" xml:space="preserve">
+    <value>Дължината на името на категория трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="CategoryNameRequiredErrorMessage" xml:space="preserve">
+    <value>Името на категорията е задължително!</value>
+  </data>
+  <data name="CommentContentLengthMessage" xml:space="preserve">
+    <value>Дължината на съдържанието на коментара трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="CommentContentRequiredErrorMessage" xml:space="preserve">
+    <value>Съдържанието на коментара е задължително!</value>
+  </data>
+  <data name="CommentTitleLengthMessage" xml:space="preserve">
+    <value>Дължината на заглавието на коментара трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="CommentTitleRequiredErrorMessage" xml:space="preserve">
+    <value>Заглавието на коментара е задължително!</value>
+  </data>
+  <data name="UserEmailInvalidErrorMessage" xml:space="preserve">
+    <value>Имейл адреса не е в правилния формат, моля опитайте отново (формат: 'example@example.com')!</value>
+  </data>
+  <data name="UserEmailRequiredErrorMessage" xml:space="preserve">
+    <value>Имейл адреса е задължителен!</value>
+  </data>
+  <data name="UserFirstNameLengthMessage" xml:space="preserve">
+    <value>Дължината на името на потребителя трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="UserFirstNameRequiredErrorMessage" xml:space="preserve">
+    <value>Името на потребителя е задължително!</value>
+  </data>
+  <data name="UserLastNameLengthMessage" xml:space="preserve">
+    <value>Дължината на фамилията на потребителя трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="UserLastNameRequiredErrorMessage" xml:space="preserve">
+    <value>Фамилията на потребителя е задължителна!</value>
+  </data>
+  <data name="UserNameLengthMessage" xml:space="preserve">
+    <value>Дължината на потребителското име трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="UserNameRequiredErrorMessage" xml:space="preserve">
+    <value>Потребителското име е задължително!</value>
+  </data>
+  <data name="UserPasswordLengthMessage" xml:space="preserve">
+    <value>Дължината на паролата трябва да е между {2} и {1} символа дълго!</value>
+  </data>
+  <data name="UserPasswordNotMatchErrorMessage" xml:space="preserve">
+    <value>Паролите не съвпадат!</value>
+  </data>
+  <data name="UserPasswordRequiredErrorMessage" xml:space="preserve">
+    <value>Паролата е задължителна!</value>
+  </data>
+</root>

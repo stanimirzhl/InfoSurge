@@ -1,30 +1,45 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static InfoSurge.Resources.ValidationMessages;
+using InfoSurge.Resources;
 using static InfoSurge.Data.Constants.DataConstants.UserConstants;
 
 namespace InfoSurge.Models.Account
 {
-    public class UpdateProfileFormModel
-    {
-        [Required(ErrorMessage = UserNameRequiredErrorMessage)]
-        [StringLength(UserNameMaxLength,
-            MinimumLength = UserNameMinLength,
-            ErrorMessage = UserNameLengthMessage)]
-        public string UserName { get; set; }
+	public class UpdateProfileFormModel
+	{
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserNameRequiredErrorMessage))]
+		[StringLength(UserNameMaxLength,
+			MinimumLength = UserNameMinLength,
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserNameLengthMessage))]
+		public string UserName { get; set; }
 
-        [Required(ErrorMessage = UserFirstNameRequiredErrorMessage)]
-        [StringLength(UserFirstNameMaxLength,
-            MinimumLength = UserFirstNameMinLength,
-            ErrorMessage = UserFirstNameLengthMessage)]
-        public string FirstName { get; set; }
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserFirstNameRequiredErrorMessage))]
+		[StringLength(UserFirstNameMaxLength,
+			MinimumLength = UserFirstNameMinLength,
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserFirstNameLengthMessage))]
+		public string FirstName { get; set; }
 
-        [Required(ErrorMessage = UserLastNameRequiredErrorMessage)]
-        [StringLength(UserLastNameMaxLength,
-            MinimumLength = UserLastNameMinLength,
-            ErrorMessage = UserLastNameLengthMessage)]
-        public string LastName { get; set; }
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserLastNameRequiredErrorMessage))]
+		[StringLength(UserLastNameMaxLength,
+			MinimumLength = UserLastNameMinLength,
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserLastNameLengthMessage))]
+		public string LastName { get; set; }
 
-        [Required(ErrorMessage = UserEmailRequiredErrorMessage)]
-        [EmailAddress(ErrorMessage = UserEmailInvalidErrorMessage)]
-        public string Email { get; set; }
-    }
+		[Required(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserEmailRequiredErrorMessage))]
+		[EmailAddress(
+			ErrorMessageResourceType = typeof(ValidationMessages),
+			ErrorMessageResourceName = nameof(UserEmailInvalidErrorMessage))]
+		public string Email { get; set; }
+	}
 }

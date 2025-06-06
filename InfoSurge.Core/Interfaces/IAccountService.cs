@@ -4,38 +4,38 @@ using System.Security.Claims;
 
 namespace InfoSurge.Core.Interfaces
 {
-    public interface IAccountService
-    {
-        Task<bool> UserNameExists(string userName);
+	public interface IAccountService
+	{
+		Task<bool> UserNameExists(string userName);
 
-        Task<bool> EmailExists(string email);
+		Task<bool> EmailExists(string email);
 
-        Task<bool> IsPasswordValidForUserName(string userName, string password);
+		Task<bool> IsPasswordValidForUserName(string userName, string password);
 
-        Task<bool> IsUserApproved(string userName);
+		Task<bool> IsUserApproved(string userName);
 
-        Task<User> GetCurrentUserById(string userId);
+		Task<User> GetCurrentUserById(string userId);
 
-        Task<IdentityResult> UpdateProfile(string userId, string userName, string firstName, string lastName, string email);
+		Task<IdentityResult> UpdateProfile(string userId, string userName, string firstName, string lastName, string email);
 
-        Task<IdentityResult> UpdatePassword(User user, string oldPassword, string newPassword);
+		Task<IdentityResult> UpdatePassword(User user, string oldPassword, string newPassword);
 
-        Task SignInAgain(User user);
+		Task SignInAgain(User user);
 
-        Task<bool> IsUserSignedIn(ClaimsPrincipal principal);
+		Task<bool> IsUserSignedIn(ClaimsPrincipal principal);
 
-        Task<IdentityResult> AddAsync(User user, string password);
+		Task<IdentityResult> AddAsync(User user, string password);
 
-        Task Delete(User user);
+		Task Delete(User user);
 
-        Task UpdateStatus(User user);
+		Task UpdateStatus(User user);
 
-        Task AddUserRole(User user);
+		Task AddUserRole(User user);
 
-        Task<SignInResult> Login(string userName, string password);
+		Task<SignInResult> Login(string userName, string password);
 
-        Task Logout();
+		Task Logout();
 
-        Task<bool> IsUserInRole(string roleName, ClaimsPrincipal principal);
-    }
+		Task<bool> IsUserInRole(string roleName, ClaimsPrincipal principal);
+	}
 }
