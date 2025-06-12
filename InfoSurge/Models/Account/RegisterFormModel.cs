@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using InfoSurge.Resources;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.UserConstants;
 using static InfoSurge.Resources.ValidationMessages;
-using InfoSurge.Resources;
 
 namespace InfoSurge.Models.Account
 {

@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using InfoSurge.Resources;
+using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.CommentConstants;
 using static InfoSurge.Resources.ValidationMessages;
-using InfoSurge.Resources;
 
 namespace InfoSurge.Models.Comment
 {

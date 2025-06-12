@@ -1,9 +1,9 @@
 ﻿using InfoSurge.Core.DTOs.ArticleImage;
+using InfoSurge.Resources;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.ArticleConstants;
 using static InfoSurge.Resources.ValidationMessages;
-using InfoSurge.Resources;
 
 namespace InfoSurge.Models.Article
 {

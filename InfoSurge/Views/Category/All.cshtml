@@ -2,44 +2,54 @@
 @using InfoSurge.Data.Models
 @using InfoSurge.Models.Category
 @model PagingModel<CategoryVM>
+
 @{
     ViewData["Title"] = "Категории";
 }
+
+<div class="d-flex justify-content-between align-items-center mt-3 mb-4">
+    <h1 class="text-primary mb-0">Категории</h1>
+
+    @if ((bool)ViewData["IsEditor"])
+    {
+        <a asp-controller="Category" asp-action="Add" class="btn btn-success btn-lg shadow-sm">
+            <i class="bi bi-plus-circle me-1"></i> Добави Категория
+        </a>
+    }
+</div>
+
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success">
         <i class="bi bi-check2-circle"></i> @TempData["Success"]
     </div>
 }
+
 @if (!Model.Items.Any())
 {
-    <h1>
-        Няма налични категории
-    </h1>
+    <div class="alert alert-info text-center">
+        <h4>Няма налични категории</h4>
+    </div>
 }
 else
 {
-    <h1 class="text-primary">Категории</h1>
-    <table class="table table-bordered table-hover table-responsive">
-        <thead>
-
-            <tr>
-                <th class="align-content-center">Име</th>
-                <th class="align-content-center">Описание</th>
-                @if ((bool)ViewData["IsSignedIn"])
-                {
-                    <th>Абонирайте се за категория, за да получавате известия за нови статии.</th>
-                }
-                @if ((bool)ViewData["IsEditor"])
-                {
-                    <th class="align-content-center">Бутони за управление</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model.Items.Any())
-            {
-
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Име</th>
+                    <th>Описание</th>
+                    @if ((bool)ViewData["IsSignedIn"])
+                    {
+                        <th>Абонамент</th>
+                    }
+                    @if ((bool)ViewData["IsEditor"])
+                    {
+                        <th>Управление</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
                 @foreach (CategoryVM category in Model.Items)
                 {
                     <tr>
@@ -47,22 +57,20 @@ else
                         <td>@category.Description</td>
                         @if ((bool)ViewData["IsSignedIn"])
                         {
-                            <td class="d-flex justify-content-evenly">
-                                <form method="post" asp-action="SubscribeToCategory" asp-controller="Category">
+                            <td>
+                                <form method="post" asp-action="SubscribeToCategory" asp-controller="Category" class="d-inline">
                                     <input type="hidden" name="categoryId" value="@category.Id" />
                                     <input type="hidden" name="pageIndex" value="@Model.PageIndex" />
-                                    <button type="submit" class="btn btn-primary">
-
-                                        @if (!category.IsUserSubscribed)
-                                        {
-
-                                            <a><i class="bi bi-plus-circle"></i> Абонирай се</a>
-                                        }
-                                        else
-                                        {
-                                            <a> <i class="bi bi-x-circle"></i> Отбонирай се</a>
-                                        }
-
+                                    <button type="submit"
+                                            tabindex="0"
+                                            data-bs-toggle="popover"
+                                            data-bs-trigger="hover focus"
+                                            data-bs-placement="right"
+                                            data-bs-title="Бутон за абониране"
+                                            data-bs-content="При натискане на бутона вие ще бъдете абонирани за тази категория, тоест при публикуване на нова новина отбелязана с тази категория, вие ще получите на вашия имейл съобщение."
+                                        class="btn btn-sm @(category.IsUserSubscribed ? "btn-outline-danger" : "btn-outline-primary")">
+                                        <i class="bi @(category.IsUserSubscribed ? "bi-x-circle" : "bi-plus-circle") me-1"></i>
+                                        @(category.IsUserSubscribed ? "Отбонирай се" : "Абонирай се")
                                     </button>
                                 </form>
                             </td>
@@ -70,18 +78,21 @@ else
                         @if ((bool)ViewData["IsEditor"])
                         {
                             <td>
-                                <a asp-controller="Category" asp-action="Edit" class="btn btn-outline-info" asp-route-id="@category.Id"><i class="bi bi-pencil-square"></i>Редактирай</a>
-                                <a asp-controller="Category" asp-action="Delete" class="btn btn-outline-danger" asp-route-id="@category.Id"><i class="bi bi-x-circle"></i>Изтрий</a>
+                                <a asp-controller="Category" asp-action="Edit" asp-route-id="@category.Id" class="btn btn-sm btn-outline-info me-1">
+                                    <i class="bi bi-pencil-square"></i> Редактирай
+                                </a>
+                                <a asp-controller="Category" asp-action="Delete" asp-route-id="@category.Id" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-x-circle"></i> Изтрий
+                                </a>
                             </td>
                         }
                     </tr>
                 }
-            }
-
-        </tbody>
-
-    </table>
+            </tbody>
+        </table>
+    </div>
 }
+
 @{
     string prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     string nextDisabled = !Model.HasNextPage ? "disabled" : "";
@@ -89,47 +100,24 @@ else
 @if (Model.Items.Any())
 {
     <div class="d-flex justify-content-center align-items-center my-4">
-        <a asp-action="All" asp-route-pageIndex="@(Model.PageIndex - 1)" class="btn btn-secondary rounded @prevDisabled">
-            <i class="bi bi-chevron-left"></i>Предишна
+        <a asp-action="All" asp-route-pageIndex="@(Model.PageIndex - 1)" class="btn btn-secondary mx-1 @prevDisabled">
+            <i class="bi bi-chevron-left"></i> Предишна
         </a>
-        <span class="badge bg-secondary fs-6 px-3 py-2 mx-1 rounded-pill" aria-live="polite">
+        <span class="badge bg-secondary fs-6 px-3 py-2 mx-1 rounded-pill">
             @Model.PageIndex
         </span>
-        <a asp-action="All" asp-route-pageIndex="@(Model.PageIndex + 1)" class="btn btn-secondary rounded @nextDisabled">
-            Следваща<i class="bi bi-chevron-right"></i>
+        <a asp-action="All" asp-route-pageIndex="@(Model.PageIndex + 1)" class="btn btn-secondary mx-1 @nextDisabled">
+            Следваща <i class="bi bi-chevron-right"></i>
         </a>
     </div>
 }
 
-@if (!Model.Items.Any())
-{
-    <div class="container-md mt-4 d-flex justify-content-center">
-        <div class="btn-group">
-            @if ((bool)ViewData["IsEditor"])
-            {
-                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-lg">
-                    Върни се обратно
-                </a>
-            }
-            <a asp-controller="Category" asp-action="Add" class="btn btn-outline-success btn-lg">
-                <i class="bi bi-plus-circle me-1"></i> Добави Категория
-            </a>
-        </div>
-    </div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const popoverElements = document.querySelectorAll('[data-bs-toggle="popover"]');
+            popoverElements.forEach(el => new bootstrap.Popover(el));
+        });
+    </script>
 }
-else
-{
-    <div class="container-md mt-4 d-flex justify-content-between">
-        @if ((bool)ViewData["IsEditor"])
-        {
-            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
-                Върни се обратно
-            </a>
-        }
-        <a asp-controller="Category" asp-action="Add" class="btn btn-outline-success">
-            <i class="bi bi-plus-circle me-1"></i> Добави Категория
-        </a>
-    </div>
-}
-
 

@@ -119,7 +119,42 @@ namespace InfoSurge.Extensions
 				await userManager.CreateAsync(adminUser, "admin123!");
 				await userManager.AddToRolesAsync(adminUser, roles);
 			}
+			if (await userManager.Users.CountAsync() == 1)
+			{
+				User testApprovedUser = new User
+				{
+					UserName = "TestUser",
+					Email = "testMail@infosurge.com",
+					FirstName = "User",
+					LastName = "Test",
+					Status = UserStatus.Approved
+				};
 
+				await userManager.CreateAsync(testApprovedUser, "test123");
+				await userManager.AddToRoleAsync(testApprovedUser, "User");
+
+				User testNotApprovedUser = new User
+				{
+					UserName = "NotApprovedUser",
+					Email = "test2Mail@infosurge.com",
+					FirstName = "Not",
+					LastName = "Approved",
+					Status = UserStatus.Pending
+				};
+
+				await userManager.CreateAsync(testNotApprovedUser, "notApprv123");
+
+				User testNoRolesUser = new User
+				{
+					UserName = "NoRolesUser",
+					Email = "test3Mail@infosurge.com",
+					FirstName = "No",
+					LastName = "Roles",
+					Status = UserStatus.Approved
+				};
+
+				await userManager.CreateAsync(testNoRolesUser, "noRoles123");
+			}
 			if (!db.Categories.Any())
 			{
 				List<Category> categories = new List<Category>

@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-using static InfoSurge.Resources.ValidationMessages;
-using InfoSurge.Resources;
+﻿using InfoSurge.Resources;
+using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.UserConstants;
+using static InfoSurge.Resources.ValidationMessages;
 
 namespace InfoSurge.Models.Account
 {
