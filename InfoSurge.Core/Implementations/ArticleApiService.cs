@@ -1,5 +1,6 @@
 ﻿using InfoSurge.Core.DTOs.Article;
 using InfoSurge.Core.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NewsAPI;
 using NewsAPI.Constants;
@@ -16,17 +17,19 @@ namespace InfoSurge.Core.Implementations
 	public class ArticleApiService : IArticleApiService
 	{
 		private readonly ILogger<ArticleApiService> logger;
+		private string apiKey;
 
-		public ArticleApiService(ILogger<ArticleApiService> logger)
+		public ArticleApiService(ILogger<ArticleApiService> logger, IConfiguration configuration)
 		{
 			this.logger = logger;
+			this.apiKey = configuration["APISettings:ApiKey"];
 		}
 
 		public async Task<PagingModel<ArticleDto>> GetPagedArticlesAsync(int pageIndex, int pageSize, List<string> source, string category)
 		{
 			//try
 			//{
-			NewsApiClient newsApiClient = new NewsApiClient("7c5eb08022e6484abe0bf281a15256cc");
+			NewsApiClient newsApiClient = new NewsApiClient(apiKey);
 
 			TopHeadlinesRequest request = new TopHeadlinesRequest
 			{
