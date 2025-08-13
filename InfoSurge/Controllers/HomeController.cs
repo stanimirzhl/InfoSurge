@@ -10,27 +10,34 @@ namespace InfoSurge.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
+		private readonly ILogger<HomeController> logger;
 		private readonly IArticleService articleService;
 		private readonly ICategoryService categoryService;
 
 		public HomeController(ILogger<HomeController> logger, IArticleService articleService, ICategoryService categoryService)
 		{
-			_logger = logger;
+			this.logger = logger;
 			this.articleService = articleService;
 			this.categoryService = categoryService;
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Index(int pageIndex = 1, ArticleIndexModel categoryAndSearchTermModel = null)
+		public async Task<IActionResult> Index()
 		{
+			return View();
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> AllArticles(int pageIndex = 1, ArticleIndexModel categoryAndSearchTermModel = null)
+		{
+
 			ViewData["IsEditor"] = User.IsInRole("Editor");
 
 			PagingModel<ArticleDto> pagedArticleDtos = await articleService.GetAllPagedArticles(categoryAndSearchTermModel.SearchTerm, pageIndex, 20, categoryAndSearchTermModel.SelectedCategoryId);
 
 			ArticleIndexModel articleIndex = new ArticleIndexModel()
 			{
-				PagedArticleModel = pagedArticleDtos.Map(x => new ArticleVM()
+				PagedArticleModel = await pagedArticleDtos.Map(async x => new ArticleVM()
 				{
 					Id = x.Id,
 					Title = x.Title,
@@ -59,7 +66,7 @@ namespace InfoSurge.Controllers
 
 			ArticleIndexModel articleIndex = new ArticleIndexModel()
 			{
-				PagedArticleModel = pagedArticleDtos.Map(x => new ArticleVM()
+				PagedArticleModel = await pagedArticleDtos.Map(async x => new ArticleVM()
 				{
 					Id = x.Id,
 					Title = x.Title,
@@ -78,8 +85,17 @@ namespace InfoSurge.Controllers
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
+		[Route("Home/Error/{code?}")]
+		public IActionResult Error(int? code = null)
 		{
+			switch (code)
+			{
+				case 404:
+					return View("Error404");
+				case 500:
+					return View("Error500");
+			}
+
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
 	}

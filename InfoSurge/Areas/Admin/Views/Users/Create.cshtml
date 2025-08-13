@@ -1,13 +1,13 @@
-﻿@using InfoSurge.Models.Users
+﻿@using InfoSurge.Models.Account
 @{
-    ViewData["Title"] = "Редактиране на потребител";
+    ViewData["Title"] = "Създаване на нов потребител";
 }
-@model EditUserFormModel
+@model RegisterFormModel
 
 <div class="row justify-content-center">
     <div class="col-xl-5 col-lg-6 col-md-8 col-sm-10">
-        <form id="registerForm" method="post" class="p-4 shadow rounded bg-white" asp-action="Edit" asp-controller="Users">
-            <h2 class="mb-3 text-center">Редактирай потребител</h2>
+        <form id="registerForm" method="post" class="p-4 shadow rounded bg-white" asp-action="Create" asp-controller="Admin">
+            <h2 class="mb-3 text-center">Създай нов потребител</h2>
             <hr class="mb-4" />
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
@@ -66,7 +66,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label d-block">Роли(по избор, може повече от една):</label>
+                <label class="form-label d-block">Роли (по избор, може повече от една):</label>
                 <select id="multiSelectDropdown"
                         name="SelectedRolesIds"
                         multiple="multiple"
@@ -80,8 +80,8 @@
                 </select>
             </div>
 
-            <button type="submit" class="w-100 btn btn-primary mb-2">Редактирай</button>
-            <a asp-action="All" asp-controller="Users" class="w-100 btn btn-secondary">Върни се обратно</a>
+            <button type="submit" class="w-100 btn btn-primary mb-2">Създай</button>
+            <a asp-action="AllUsers" asp-controller="Admin" class="w-100 btn btn-secondary">Върни се обратно</a>
         </form>
     </div>
 </div>

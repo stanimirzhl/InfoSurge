@@ -21,5 +21,13 @@
 		public List<string> CategoryNames { get; set; } = new List<string>();
 
 		public DateTime PublishDate { get; set; }
+
+		public string? Url { get; set; }
+
+		public string? Source { get; set; }
+
+		public string? Category { get; set; }
+
+		public string? SourceName { get; set; }
 	}
 }

@@ -32,7 +32,7 @@ namespace InfoSurge.Controllers
 		{
 			PagingModel<CommentDto> pagedCommentDto = await commentService.GetAllPendingPagedComments(pageIndex, pageSize);
 
-			PagingModel<CommentVM> pagedCommentVM = pagedCommentDto.Map(x => new CommentVM()
+			PagingModel<CommentVM> pagedCommentVM = await pagedCommentDto.Map(async x => new CommentVM()
 			{
 				AuthorName = x.AuthorName,
 				Content = x.Content,

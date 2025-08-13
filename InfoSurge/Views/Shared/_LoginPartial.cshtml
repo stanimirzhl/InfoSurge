@@ -11,13 +11,16 @@
                     Профил
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Моят профил</a></li>
+                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile" asp-area="">Моят профил</a></li>
                     @if (User.IsInRole("Moderator"))
                     {
-                        <li><a class="dropdown-item" asp-controller="Comment" asp-action="All">Коментари</a></li>
+                        <li><a class="dropdown-item" asp-controller="Comment" asp-action="All" asp-area="">Коментари</a></li>
                     }
-                    <li><a class="dropdown-item" asp-controller="Category" asp-action="All">Категории</a></li>
-                    <li><a class="dropdown-item" asp-controller="Users" asp-action="All">Потребители</a></li>
+                    <li><a class="dropdown-item" asp-controller="Category" asp-action="All" asp-area="">Категории</a></li>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="AllUsers" asp-area="Admin">Потребители</a></li>
+                    }
                     <li>
                         <a>
                             <button class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">
@@ -39,7 +42,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмени</button>
-                        <form class="d-inline" asp-controller="Account" asp-action="Logout">
+                        <form class="d-inline" asp-controller="Account" asp-action="Logout" asp-area="">
                             <button type="submit" class="btn btn-outline-danger">Излез</button>
                         </form>
                     </div>

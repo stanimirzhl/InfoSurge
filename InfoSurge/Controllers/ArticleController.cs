@@ -6,6 +6,7 @@ using InfoSurge.Models.Article;
 using InfoSurge.Models.Comment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace InfoSurge.Controllers
@@ -118,7 +119,13 @@ namespace InfoSurge.Controllers
                     <h2>Нова статия в категория</h2>
                     <p>Статията <strong>{formModel.Title}</strong> беше публикувана.</p>";
 
-					await emailService.SendEmailAsync(email, "Ново известие", message);
+					try
+					{
+						await emailService.SendEmailAsync(email, "Ново известие", message);
+					}
+					catch (Exception ex)
+					{
+					}
 				}
 
 			}
@@ -126,7 +133,7 @@ namespace InfoSurge.Controllers
 			await articleService.ChangeDirectory(articleId);
 			await articleImageService.ChangeDirectory(articleId);
 
-			return RedirectToAction("Index", "Home");
+			return RedirectToAction("AllArticles", "Home");
 		}
 
 		[HttpGet]
@@ -231,7 +238,7 @@ namespace InfoSurge.Controllers
 
 				await articleService.EditAsync(articleDto);
 
-				return RedirectToAction("Index", "Home");
+				return RedirectToAction("AllArticles", "Home");
 			}
 			catch (NoEntityException ex)
 			{
@@ -283,7 +290,7 @@ namespace InfoSurge.Controllers
 
 				await fileService.DeleteImagesFolder(id);
 
-				return RedirectToAction("Index", "Home");
+				return RedirectToAction("AllArticles", "Home");
 			}
 			catch (NoEntityException ex)
 			{
@@ -321,7 +328,7 @@ namespace InfoSurge.Controllers
 				ArticleDetailsModel articleDetails = new ArticleDetailsModel()
 				{
 					Article = articleVM,
-					PagedComments = pagedCommentDto.Map(x => new CommentVM()
+					PagedComments = await pagedCommentDto.Map(async x => new CommentVM()
 					{
 						Id = x.Id,
 						Title = x.Title,

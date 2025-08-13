@@ -1,41 +1,52 @@
-﻿using InfoSurge.Core;
+﻿using InfoSurge.Areas.Admin.Models.Users;
+using InfoSurge.Core;
 using InfoSurge.Core.DTOs.User;
 using InfoSurge.Core.Interfaces;
 using InfoSurge.Data.Models;
 using InfoSurge.Models.Account;
-using InfoSurge.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
+using System.Security.Claims;
 
-namespace InfoSurge.Controllers
+namespace InfoSurge.Areas.Admin.Controllers
 {
-	public class UsersController : Controller
+	[Area("Admin")]
+	[Authorize(Roles = "Administrator")]
+	public class AdminController : Controller
 	{
 		private IUserService userService;
 		private IAccountService accountService;
 		private IEmailService emailService;
 		private readonly IStringLocalizer<SharedResources> localizer;
+		private readonly ILogger<AdminController> logger;
 
-		public UsersController(IUserService userService, IAccountService accountService, IEmailService emailService,
-			IStringLocalizer<SharedResources> localizer)
+		public AdminController(IUserService userService, IAccountService accountService, 
+			IEmailService emailService,
+			IStringLocalizer<SharedResources> localizer,
+			ILogger<AdminController> logger)
 		{
 			this.userService = userService;
 			this.accountService = accountService;
 			this.emailService = emailService;
 			this.localizer = localizer;
+			this.logger = logger;
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> All(int pageIndex = 1, int pageSize = 6)
+		public IActionResult DashBoard()
 		{
-			ViewData["IsAdmin"] = User.IsInRole("Administrator");
+			return View("~/Areas/Admin/Views/DashBoard.cshtml");
+		}
 
+		[HttpGet]
+		public async Task<IActionResult> AllUsers(int pageIndex = 1, int pageSize = 6)
+		{
 			PagingModel<UserDto> userDtos = await userService.GetAllUsersPaged(pageIndex, pageSize);
 
-			PagingModel<UserVM> pagedUsers = userDtos.Map(x => new UserVM
+			PagingModel<UserVM> pagedUsers = await userDtos.Map(async x => new UserVM
 			{
 				Id = x.Id,
 				UserName = x.UserName,
@@ -47,29 +58,27 @@ namespace InfoSurge.Controllers
 				Status = x.Status
 			});
 
-			return View(pagedUsers);
+			return View("~/Areas/Admin/Views/Users/AllUsers.cshtml",pagedUsers);
 		}
 
 		[HttpGet]
-		[Authorize(Roles = "Administrator")]
 		public async Task<IActionResult> Create()
 		{
 			List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 
-			return View(new RegisterFormModel
+			return View("~/Areas/Admin/Views/Users/Create.cshtml",new RegisterFormModel
 			{
 				Roles = roles
 			});
 		}
 		[HttpPost]
-		[Authorize(Roles = "Administrator")]
 		public async Task<IActionResult> Create(RegisterFormModel formModel)
 		{
 			if (!ModelState.IsValid)
 			{
 				List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 				formModel.Roles = roles;
-				return View(formModel);
+				return View("~/Areas/Admin/Views/Users/Create.cshtml",formModel);
 			}
 
 			if (await accountService.UserNameExists(formModel.UserName))
@@ -77,7 +86,7 @@ namespace InfoSurge.Controllers
 				ModelState.AddModelError(string.Empty, "Потребител с това име вече съществува!");
 				List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 				formModel.Roles = roles;
-				return View(formModel);
+				return View("~/Areas/Admin/Views/Users/Create.cshtml",formModel);
 			}
 
 			if (await accountService.EmailExists(formModel.Email))
@@ -85,7 +94,7 @@ namespace InfoSurge.Controllers
 				ModelState.AddModelError(string.Empty, "Потребител с този имейл вече съществува!");
 				List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 				formModel.Roles = roles;
-				return View(formModel);
+				return View("~/Areas/Admin/Views/Users/Create.cshtml", formModel);
 			}
 
 			User user = new User
@@ -114,16 +123,17 @@ namespace InfoSurge.Controllers
 						}
 						catch (NoEntityException ex)
 						{
+							logger.LogError(ex.Message, ex);
+
 							return BadRequest();
 						}
 					}
 				}
 			}
-			return RedirectToAction("All");
+			return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
 		}
 
 		[HttpGet]
-		[Authorize(Roles = "Administrator")]
 		public async Task<IActionResult> Edit(string id)
 		{
 			try
@@ -140,7 +150,7 @@ namespace InfoSurge.Controllers
 					SelectedRolesIds = await userService.GetRoleIdsByUser(user)
 				};
 
-				return View(formModel);
+				return View("~/Areas/Admin/Views/Users/Edit.cshtml", formModel);
 			}
 			catch (NoEntityException ex)
 			{
@@ -149,7 +159,6 @@ namespace InfoSurge.Controllers
 			}
 		}
 		[HttpPost]
-		[Authorize(Roles = "Administrator")]
 		public async Task<IActionResult> Edit(EditUserFormModel formModel, string id)
 		{
 			if (!ModelState.IsValid)
@@ -157,7 +166,7 @@ namespace InfoSurge.Controllers
 				List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 				formModel.Roles = roles;
 				formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
-				return View(formModel);
+				return View("~/Areas/Admin/Views/Users/Edit.cshtml", formModel);
 			}
 
 			try
@@ -170,7 +179,7 @@ namespace InfoSurge.Controllers
 					List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 					formModel.Roles = roles;
 					formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
-					return View(formModel);
+					return View("~/Areas/Admin/Views/Users/Edit.cshtml", formModel);
 				}
 
 				if (await accountService.EmailExists(formModel.Email) && user.Email != formModel.Email)
@@ -179,7 +188,7 @@ namespace InfoSurge.Controllers
 					List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 					formModel.Roles = roles;
 					formModel.SelectedRolesIds = await userService.GetRoleIdsByUser(await accountService.GetCurrentUserById(id));
-					return View(formModel);
+					return View("~/Areas/Admin/Views/Users/Edit.cshtml", formModel);
 				}
 
 				if (!string.IsNullOrEmpty(formModel.Password))
@@ -204,7 +213,20 @@ namespace InfoSurge.Controllers
 
 						await userService.AddRoleToUser(user, roleName);
 					}
-					await userService.RemoveRolesFromUser(user, rolesToRemove);
+
+					List<string> roleNamesToRemove = new List<string>();
+					foreach (string role in rolesToRemove)
+					{
+						string roleName = await userService.GetRoleNameById(role);
+
+						roleNamesToRemove.Add(roleName);
+					}
+					await userService.RemoveRolesFromUser(user, roleNamesToRemove);
+
+					if (rolesToAdd.Count > 0 || rolesToRemove.Count > 0)
+					{
+						await userService.RefreshSignIn(user);
+					}
 
 					TempData["SuccessfulUpdate"] = localizer["UserUpdated"].Value;
 
@@ -223,25 +245,40 @@ namespace InfoSurge.Controllers
 
 					await emailService.SendEmailAsync(user.Email, subject, message);
 				}
-				return RedirectToAction("All");
+				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
 			}
 			catch (NoEntityException ex)
 			{
 				return BadRequest();
 			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex.Message);
+
+				return RedirectToAction("Error", "Home", new { code = 500 });
+			}
 		}
 
 		[HttpPost]
-		[Authorize(Roles = "Administrator")]
 		public async Task<IActionResult> Delete(string userId)
 		{
+			string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var strings = localizer.GetAllStrings();
+
+			if(userId == currentUserId)
+			{
+				TempData["Error"] = localizer["UserDeletion"].Value;
+				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
+			}
+
 			try
 			{
 				User user = await accountService.GetCurrentUserById(userId);
 
 				await accountService.Delete(user);
 
-				return RedirectToAction("All");
+				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
 			}
 			catch (NoEntityException ex)
 			{
@@ -250,7 +287,6 @@ namespace InfoSurge.Controllers
 		}
 
 		[HttpPost]
-		[Authorize(Roles = "Administrator")]
 		public async Task<IActionResult> Approve(string userId)
 		{
 			try
@@ -274,16 +310,21 @@ namespace InfoSurge.Controllers
 
 				await emailService.SendEmailAsync(user.Email, subject, message);
 
-				return RedirectToAction("All");
+				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
 			}
 			catch (NoEntityException ex)
 			{
 				return BadRequest();
 			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex.Message);
+
+				return RedirectToAction("Error", "Home", new { code = 500 });
+			}
 		}
 
 		[HttpPost]
-		[Authorize(Roles = "Administrator")]
 		public async Task<IActionResult> Reject(string userId)
 		{
 			try
@@ -301,11 +342,17 @@ namespace InfoSurge.Controllers
 
 				await accountService.Delete(user);
 
-				return RedirectToAction("All");
+				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
 			}
 			catch (NoEntityException ex)
 			{
 				return BadRequest();
+			}
+			catch (Exception ex)
+			{
+				logger.LogError(ex.Message);
+
+				return RedirectToAction("Error", "Home", new { code = 500 });
 			}
 		}
 	}

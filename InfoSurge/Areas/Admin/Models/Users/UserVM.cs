@@ -1,4 +1,4 @@
-﻿namespace InfoSurge.Models.Users
+﻿namespace InfoSurge.Areas.Admin.Models.Users
 {
 	public class UserVM
 	{

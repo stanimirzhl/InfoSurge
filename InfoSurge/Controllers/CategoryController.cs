@@ -15,16 +15,19 @@ namespace InfoSurge.Controllers
 		private IAccountService accountService;
 		private ICategoryUserService categoryUserService;
 		private readonly IStringLocalizer<SharedResources> localizer;
+		private readonly ILogger<CategoryController> logger;
 
 		public CategoryController(ICategoryService brandService,
 			IAccountService accountService,
 			ICategoryUserService categoryUserService,
-			IStringLocalizer<SharedResources> localizer)
+			IStringLocalizer<SharedResources> localizer,
+			ILogger<CategoryController> logger)
 		{
 			this.categoryService = brandService;
 			this.accountService = accountService;
 			this.categoryUserService = categoryUserService;
 			this.localizer = localizer;
+			this.logger = logger;
 		}
 
 		[HttpGet]
@@ -38,7 +41,7 @@ namespace InfoSurge.Controllers
 			PagingModel<CategoryDto> pagedCategories = await categoryService.GetAllPagedCategories(pageIndex, pageSize);
 
 			PagingModel<CategoryVM> pagedViewModels =
-				pagedCategories.Map(x => new CategoryVM
+				await pagedCategories.Map(async x => new CategoryVM
 				{
 					Id = x.Id,
 					Name = x.Name,
@@ -195,6 +198,12 @@ namespace InfoSurge.Controllers
 				catch (NoEntityException ex)
 				{
 					return BadRequest();
+				}
+				catch (Exception ex)
+				{
+					logger.LogError(ex.Message);
+
+					return RedirectToAction("Error", "Home", new { code = 500 });
 				}
 				TempData["Success"] = localizer["Unsubscribed"].Value;
 			}

@@ -29,9 +29,15 @@ namespace InfoSurge.Core
 
 			return new PagingModel<T>(items, count, pageIndex, pageSize);
 		}
-		public PagingModel<TResult> Map<TResult>(Func<T, TResult> mapFunc)
+		public async Task<PagingModel<TResult>> Map<TResult>(Func<T, Task<TResult>> mapFunc)
 		{
-			List<TResult> mappedItems = Items.Select(mapFunc).ToList();
+			List<TResult> mappedItems = new List<TResult>();
+
+			foreach (var item in Items)
+			{
+				TResult result = await mapFunc(item);
+				mappedItems.Add(result);
+			}
 			return new PagingModel<TResult>(mappedItems, TotalCount, PageIndex, PageSize);
 		}
 	}

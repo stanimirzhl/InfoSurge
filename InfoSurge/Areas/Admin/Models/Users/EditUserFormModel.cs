@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using static InfoSurge.Data.Constants.DataConstants.UserConstants;
 using static InfoSurge.Resources.ValidationMessages;
 
-namespace InfoSurge.Models.Users
+namespace InfoSurge.Areas.Admin.Models.Users
 {
 	public class EditUserFormModel
 	{

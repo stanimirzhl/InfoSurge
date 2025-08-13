@@ -131,6 +131,11 @@ namespace InfoSurge.Controllers
 				return View(formModel);
 			}
 
+			if (User.IsInRole("Administrator"))
+			{
+				return RedirectToAction("DashBoard", "Admin", new { area = "Admin" });
+			}
+
 			if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
 			{
 				return LocalRedirect(ReturnUrl);

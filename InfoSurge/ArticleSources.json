@@ -1,0 +1,42 @@
+[
+  {
+    "DisplayName": "BBC News",
+    "ApiValue": "bbc-news"
+  },
+  {
+    "DisplayName": "Bloomberg",
+    "ApiValue": "bloomberg"
+  },
+  {
+    "DisplayName": "Business Insider",
+    "ApiValue": "business-insider"
+  },
+  {
+    "DisplayName": "BuzzFeed",
+    "ApiValue": "buzzfeed"
+  },
+  {
+    "DisplayName": "CBS News",
+    "ApiValue": "cbs-news"
+  },
+  {
+    "DisplayName": "CNN",
+    "ApiValue": "cnn"
+  },
+  {
+    "DisplayName": "Healthline",
+    "ApiValue": "healthline"
+  },
+  {
+    "DisplayName": "National Geographic",
+    "ApiValue": "national-geographic"
+  },
+  {
+    "DisplayName": "The Verge",
+    "ApiValue": "the-verge"
+  },
+  {
+    "DisplayName": "Wired",
+    "ApiValue": "wired"
+  }
+]

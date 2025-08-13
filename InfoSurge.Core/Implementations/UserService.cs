@@ -106,5 +106,10 @@ namespace InfoSurge.Core.Implementations
 		{
 			await userManager.RemoveFromRolesAsync(user, roleNames);
 		}
+
+		public async Task RefreshSignIn(User user)
+		{
+			await signInManager.RefreshSignInAsync(user);
+		}
 	}
 }

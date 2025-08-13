@@ -21,5 +21,7 @@ namespace InfoSurge.Core.Interfaces
 		Task RemoveRolesFromUser(User user, List<string> roleNames);
 
 		Task ChangeUserPassword(User user, string password);
+
+		Task RefreshSignIn(User user);
 	}
 }

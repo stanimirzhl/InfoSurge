@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Страницата не е намерена";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="p-5 shadow-lg border-0 rounded-4"
+                 style="background: linear-gradient(135deg, #fff8f0, #ffad72);">
+
+                <div class="mb-4">
+                    <i class="bi bi-emoji-frown-fill" style="font-size: 60px; color: #e06a32;"></i>
+                </div>
+
+                <h2 class="fw-bold mb-3" style="color: #c65125;">
+                    404 - Страницата не е намерена
+                </h2>
+
+                <p class="lead mb-4 fw-medium" style="color: #8b3d20; font-size:1.2rem;">
+                    Изглежда страницата, която търсите, не съществува или е преместена.
+                </p>
+
+                <a asp-controller="Home" asp-action="Index"
+                   class="btn btn-lg px-5 py-2"
+                   style="background-color: #e06a32; color: white; font-weight: 500; border-radius: 50px;">
+                    <i class="bi bi-house-door-fill me-2"></i> Начална страница
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

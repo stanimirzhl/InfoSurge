@@ -28,6 +28,11 @@ namespace InfoSurge.Extensions
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<ICategoryUserService, CategoryUserService>();
 			services.AddScoped<IEmailService, EmailService>();
+			services.AddScoped<IArticleApiService, ArticleApiService>();
+			services.AddScoped<IJsonLoadService, JsonLoadService>();
+			services.AddHttpClient<ITranslationService, TranslationService>();
+			services.AddMemoryCache();
+			services.AddHostedService<ArticleCacheService>();
 
 			services.AddMvc(options =>
 				options

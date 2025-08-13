@@ -117,34 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Register" xml:space="preserve">
-    <value>Регистрацията ви ще бъде разгледана от нашите администратори...</value>
+  <data name="BBC News" xml:space="preserve">
+    <value>bbc-news</value>
   </data>
-  <data name="ProfileUpdated" xml:space="preserve">
-    <value>Профилът е успешно обновен!</value>
+  <data name="Bloomberg" xml:space="preserve">
+    <value>bloomberg</value>
   </data>
-  <data name="PasswordInvalid" xml:space="preserve">
-    <value>Неуспешно променяне на данните, паролата е невалидна!</value>
+  <data name="Business Insider" xml:space="preserve">
+    <value>business-insider</value>
   </data>
-  <data name="PasswordUpdated" xml:space="preserve">
-    <value>Паролата е успешно обновена!</value>
+  <data name="BuzzFeed" xml:space="preserve">
+    <value>buzzfeed</value>
   </data>
-  <data name="Subscribed" xml:space="preserve">
-    <value>Успешно се абонирахте за категорията.</value>
+  <data name="CBS News" xml:space="preserve">
+    <value>cbs-news</value>
   </data>
-  <data name="Unsubscribed" xml:space="preserve">
-    <value>Успешно се отбонирахте от категорията.</value>
+  <data name="CNN" xml:space="preserve">
+    <value>cnn</value>
   </data>
-  <data name="CommentSent" xml:space="preserve">
-    <value>Коментарът ви е изпратен за проверка от нашите модератори.</value>
+  <data name="Healthline" xml:space="preserve">
+    <value>healthline</value>
   </data>
-  <data name="UserUpdated" xml:space="preserve">
-    <value>Успешно обновихте потребителските данни!</value>
+  <data name="National Geographic" xml:space="preserve">
+    <value>national-geographic</value>
   </data>
-  <data name="UserDeletion" xml:space="preserve">
-    <value>Не може да изтриете вашия акаунт!</value>
+  <data name="The Verge" xml:space="preserve">
+    <value>the-verge</value>
   </data>
-  <data name="ApiError" xml:space="preserve">
-    <value>Неуспешно зареждане на статиите. Моля, опитайте по-късно.</value>
+  <data name="Wired" xml:space="preserve">
+    <value>wired</value>
   </data>
 </root>

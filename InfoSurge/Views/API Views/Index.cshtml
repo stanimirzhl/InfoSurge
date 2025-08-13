@@ -1,0 +1,166 @@
+﻿@using InfoSurge.Models.API_Article_Model
+@model ArticleApiIndexModel
+
+@{
+    ViewData["Title"] = "Статии от други сайтове";
+}
+
+@if (Model.Articles.TotalCount > 0)
+{
+    <form method="get" asp-action="Index" class="mb-3">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Категория</label>
+                <select class="form-control" id="SelectedCategory" name="category">
+                    <option value="">-- Всички --</option>
+                    @foreach (SelectListItem category in Model.Categories)
+                    {
+                        <!option value="@category.Value" @(category.Value == Model.SelectedCategory ? "selected" : "")>
+                        @category.Text
+                        </!option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Източник</label>
+                <select id="SelectedSource" name="source" class="form-control">
+                    <option value="">-- Всички --</option>
+                    @foreach (SelectListItem source in Model.Sources)
+                    {
+                        <!option value="@source.Value" @(source.Value == Model.SelectedSource ? "selected" : "")>
+                        @source.Text
+                        </!option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary">Филтрирай</button>
+            </div>
+        </div>
+    </form>
+}
+
+@{
+    bool isLoading = ViewBag.IsLoading ?? false;
+}
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <div class="p-4 shadow-lg border-0 rounded-4" style="background: linear-gradient(135deg, #fff8e5, #fff3cd);">
+                    <div class="mb-3">
+                        <i class="bi bi-exclamation-triangle-fill" style="font-size: 48px; color: #ff9800;"></i>
+                    </div>
+                    <h2 class="fw-bold mb-3" style="color: #856404;">
+                        Възникна грешка
+                    </h2>
+                    <p class="lead mb-4 fw-medium" style="color: #6c4f00;">
+                        @ViewData["ErrorMessage"]
+                    </p>
+                    <a asp-controller="Home" asp-action="Index"
+                       class="btn btn-lg px-4"
+                       style="background-color: #ff9800; color: white; font-weight: 500; border-radius: 50px;">
+                        <i class="bi bi-house-door-fill me-2"></i> Върни се обратно
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @if (isLoading)
+    {
+        <div class="d-flex justify-content-center align-items-center flex-column" style="height: 70vh;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Зареждане...</span>
+            </div>
+            <p class="mt-3 fs-6 text-muted">Извличане на статии, моля изчакайте...</p>
+
+            <script>
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            </script>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            @foreach (var article in Model.Articles.Items)
+            {
+                <div class="card mb-2 shadow-sm">
+                    <div class="row g-0">
+                        @if (!string.IsNullOrWhiteSpace(article.MainImageUrl))
+                        {
+                            <div class="col-md-3">
+                                <img src="@article.MainImageUrl" class="img-fluid rounded-start" alt="Article Image">
+                            </div>
+                        }
+                        <div class="col-md-9">
+                            <div class="card-body py-2">
+                                <h6 class="card-title mb-1">@article.Title</h6>
+                                <p class="card-text text-muted small mb-1">@article.Introduction</p>
+                                <p class="card-text mb-1"><small class="text-body-secondary">Публикувано: @article.PublishDate</small></p>
+                                <p class="card-text mb-2"><strong class="text-body-secondary">Източник: @article.SourceName</strong></p>
+                                <a href="@article.Url" target="_blank" class="btn btn-outline-primary btn-sm">Прочети още</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+@if (Model.Articles.TotalCount > 0)
+{
+    <div class="text-center my-3">
+        @if (Model.Articles.HasPreviousPage)
+        {
+            <a asp-action="Index"
+               asp-controller="ArticleApi"
+               asp-route-pageIndex="@(Model.Articles.PageIndex - 1)"
+               asp-route-category="@Model.SelectedCategory"
+               asp-route-source="@Model.SelectedSource"
+               class="btn btn-secondary btn-sm mx-1 @(Model.Articles.HasPreviousPage ? "" : "disabled")">
+                <i class="bi bi-chevron-left"></i> Назад
+            </a>
+        }
+
+        <span class="badge bg-secondary fs-6 px-3 py-2 mx-2 rounded-pill">
+            Страница @Model.Articles.PageIndex от @Model.Articles.TotalPages
+        </span>
+
+        @if (Model.Articles.HasNextPage)
+        {
+            <a asp-action="Index"
+               asp-controller="ArticleApi"
+               asp-route-pageIndex="@(Model.Articles.PageIndex + 1)"
+               asp-route-category="@Model.SelectedCategory"
+               asp-route-source="@Model.SelectedSource"
+               class="btn btn-secondary btn-sm mx-1 @(Model.Articles.HasNextPage ? "" : "disabled")">
+                Напред <i class="bi bi-chevron-right"></i>
+            </a>
+        }
+    </div>
+}
+
+<script>
+    const categorySelect = document.getElementById('SelectedCategory');
+    const sourceSelect = document.getElementById('SelectedSource');
+
+    function toggleSelects() {
+        sourceSelect.disabled = !!categorySelect.value;
+        categorySelect.disabled = !!sourceSelect.value;
+    }
+
+    toggleSelects();
+
+    categorySelect.addEventListener('change', toggleSelects);
+    sourceSelect.addEventListener('change', toggleSelects);
+</script>

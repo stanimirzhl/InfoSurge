@@ -36,7 +36,12 @@ await app.ApplyDatabaseMigrations();
 
 if (!app.Environment.IsDevelopment())
 {
-	app.UseExceptionHandler("/Home/Error");
+	app.UseDeveloperExceptionPage();
+}
+else
+{
+	app.UseExceptionHandler("/Home/Error/500");
+	app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 	app.UseHsts();
 }
 
@@ -46,6 +51,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+	name: "areas",
+	pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
 	name: "default",
