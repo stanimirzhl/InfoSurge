@@ -98,8 +98,6 @@ namespace InfoSurge.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Login(LoginFormModel formModel, string ReturnUrl = null)
 		{
-			ReturnUrl ??= Url.Content("~/");
-
 			if (!ModelState.IsValid)
 			{
 				return View(formModel);
@@ -131,14 +129,14 @@ namespace InfoSurge.Controllers
 				return View(formModel);
 			}
 
+			if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl) && ReturnUrl != "/")
+			{
+				return LocalRedirect(ReturnUrl);
+			}
+
 			if (User.IsInRole("Administrator"))
 			{
 				return RedirectToAction("DashBoard", "Admin", new { area = "Admin" });
-			}
-
-			if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
-			{
-				return LocalRedirect(ReturnUrl);
 			}
 
 			return RedirectToAction("Index", "Home");
