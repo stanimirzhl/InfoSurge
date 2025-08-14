@@ -41,7 +41,7 @@ namespace InfoSurge.Core.Implementations
 			}
 			catch (SmtpException ex)
 			{
-				throw new InvalidOperationException($"Error sending email: {ex.Message}", ex);
+				throw new InvalidOperationException($"Проблем при изпращане на имейл: {ex.InnerException}", ex);
 			}
 		}
 	}

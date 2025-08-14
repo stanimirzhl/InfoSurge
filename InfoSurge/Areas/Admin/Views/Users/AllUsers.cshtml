@@ -2,6 +2,10 @@
 @using InfoSurge.Core
 @model PagingModel<UserVM>
 
+@{
+    ViewData["Title"] = "Всички потребители";
+}
+
 @if (TempData["SuccessfulUpdate"] != null)
 {
     <div class="alert alert-success">

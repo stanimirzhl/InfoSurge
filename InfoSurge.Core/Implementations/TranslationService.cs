@@ -49,7 +49,7 @@ namespace InfoSurge.Core.Implementations
 				if (!response.IsSuccessStatusCode)
 				{
 					string errorContent = await response.Content.ReadAsStringAsync();
-					logger.LogError($"Error {response.StatusCode}: {errorContent}");
+					logger.LogError($"Error {response.StatusCode}: {errorContent}, {response.Headers}");
 
 					return texts;
 				}

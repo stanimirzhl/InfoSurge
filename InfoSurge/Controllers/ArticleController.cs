@@ -24,6 +24,7 @@ namespace InfoSurge.Controllers
 		private IReactService reactService;
 		private IEmailService emailService;
 		private ICategoryUserService categoryUserService;
+		private readonly ILogger<ArticleController> logger;
 
 		public ArticleController(IArticleService articleService,
 			IArticleImageService articleImageService,
@@ -35,7 +36,8 @@ namespace InfoSurge.Controllers
 			ISavedArticleService savedArticleService,
 			IReactService reactService,
 			ICategoryUserService categoryUserService,
-			IEmailService emailService)
+			IEmailService emailService,
+			ILogger<ArticleController> logger)
 		{
 			this.articleService = articleService;
 			this.articleImageService = articleImageService;
@@ -48,6 +50,7 @@ namespace InfoSurge.Controllers
 			this.reactService = reactService;
 			this.emailService = emailService;
 			this.categoryUserService = categoryUserService;
+			this.logger = logger;
 		}
 
 		public IActionResult Index()
@@ -125,6 +128,7 @@ namespace InfoSurge.Controllers
 					}
 					catch (Exception ex)
 					{
+						logger.LogError(ex.Message, ex);
 					}
 				}
 

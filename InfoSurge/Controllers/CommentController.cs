@@ -16,14 +16,19 @@ namespace InfoSurge.Controllers
 		private IArticleService articleService;
 		private IEmailService emailService;
 		private readonly IStringLocalizer<SharedResources> localizer;
+		private readonly ILogger<CommentController> logger;
 
-		public CommentController(ICommentService commentService, IArticleService articleService, IEmailService emailService,
-			IStringLocalizer<SharedResources> localizer)
+		public CommentController(ICommentService commentService, 
+			IArticleService articleService, 
+			IEmailService emailService,
+			IStringLocalizer<SharedResources> localizer,
+			ILogger<CommentController> logger)
 		{
 			this.commentService = commentService;
 			this.articleService = articleService;
 			this.emailService = emailService;
 			this.localizer = localizer;
+			this.logger = logger;
 		}
 
 		[HttpGet]
@@ -88,7 +93,15 @@ namespace InfoSurge.Controllers
 				foreach (string email in userEmails)
 				{
 					string message = "<p>Нов коментар под новина, под която сте коментирали.</p>";
-					await emailService.SendEmailAsync(email, "Ново известие", message);
+
+					try
+					{
+						await emailService.SendEmailAsync(email, "Ново известие", message);
+					}
+					catch(Exception ex)
+					{
+						logger.LogError(ex.Message, ex);
+					}
 				}
 			}
 			catch (NoEntityException ex)

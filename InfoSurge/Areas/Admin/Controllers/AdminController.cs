@@ -23,7 +23,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 		private readonly IStringLocalizer<SharedResources> localizer;
 		private readonly ILogger<AdminController> logger;
 
-		public AdminController(IUserService userService, IAccountService accountService, 
+		public AdminController(IUserService userService, IAccountService accountService,
 			IEmailService emailService,
 			IStringLocalizer<SharedResources> localizer,
 			ILogger<AdminController> logger)
@@ -58,7 +58,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 				Status = x.Status
 			});
 
-			return View("~/Areas/Admin/Views/Users/AllUsers.cshtml",pagedUsers);
+			return View("~/Areas/Admin/Views/Users/AllUsers.cshtml", pagedUsers);
 		}
 
 		[HttpGet]
@@ -66,7 +66,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 		{
 			List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 
-			return View("~/Areas/Admin/Views/Users/Create.cshtml",new RegisterFormModel
+			return View("~/Areas/Admin/Views/Users/Create.cshtml", new RegisterFormModel
 			{
 				Roles = roles
 			});
@@ -78,7 +78,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 			{
 				List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 				formModel.Roles = roles;
-				return View("~/Areas/Admin/Views/Users/Create.cshtml",formModel);
+				return View("~/Areas/Admin/Views/Users/Create.cshtml", formModel);
 			}
 
 			if (await accountService.UserNameExists(formModel.UserName))
@@ -86,7 +86,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 				ModelState.AddModelError(string.Empty, "Потребител с това име вече съществува!");
 				List<SelectListItem> roles = await userService.GetAllRolesIntoSelectList();
 				formModel.Roles = roles;
-				return View("~/Areas/Admin/Views/Users/Create.cshtml",formModel);
+				return View("~/Areas/Admin/Views/Users/Create.cshtml", formModel);
 			}
 
 			if (await accountService.EmailExists(formModel.Email))
@@ -243,7 +243,14 @@ namespace InfoSurge.Areas.Admin.Controllers
 						message += $"<p><strong>Парола:</strong> {formModel.Password}.</p>";
 					}
 
-					await emailService.SendEmailAsync(user.Email, subject, message);
+					try
+					{
+						await emailService.SendEmailAsync(user.Email, subject, message);
+					}
+					catch (InvalidOperationException ex)
+					{
+						logger.LogError(ex.Message, ex);
+					}
 				}
 				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
 			}
@@ -253,7 +260,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex.Message);
+				logger.LogError(ex.Message, ex);
 
 				return RedirectToAction("Error", "Home", new { code = 500 });
 			}
@@ -266,7 +273,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 
 			var strings = localizer.GetAllStrings();
 
-			if(userId == currentUserId)
+			if (userId == currentUserId)
 			{
 				TempData["Error"] = localizer["UserDeletion"].Value;
 				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
@@ -308,7 +315,14 @@ namespace InfoSurge.Areas.Admin.Controllers
                 <p>Вече имате възможността да добавяте коментари, реагирате на новини и да се абонирате за избрани от вас категории.</p>
                 ";
 
-				await emailService.SendEmailAsync(user.Email, subject, message);
+				try
+				{
+					await emailService.SendEmailAsync(user.Email, subject, message);
+				}
+				catch (InvalidOperationException ex)
+				{
+					logger.LogError(ex.Message, ex);
+				}
 
 				return RedirectToAction("AllUsers", "Admin", new { area = "Admin" });
 			}
@@ -318,7 +332,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex.Message);
+				logger.LogError(ex.Message, ex);
 
 				return RedirectToAction("Error", "Home", new { code = 500 });
 			}
@@ -338,7 +352,15 @@ namespace InfoSurge.Areas.Admin.Controllers
                 <p><strong>Име:</strong> {user.FirstName}.</p>
                 <p><strong>Фамилия:</strong> {user.LastName}.</p>
                 ";
-				await emailService.SendEmailAsync(user.Email, subject, message);
+
+				try
+				{
+					await emailService.SendEmailAsync(user.Email, subject, message);
+				}
+				catch (InvalidOperationException ex)
+				{
+					logger.LogError(ex.Message, ex);
+				}
 
 				await accountService.Delete(user);
 
@@ -350,7 +372,7 @@ namespace InfoSurge.Areas.Admin.Controllers
 			}
 			catch (Exception ex)
 			{
-				logger.LogError(ex.Message);
+				logger.LogError(ex.Message, ex);
 
 				return RedirectToAction("Error", "Home", new { code = 500 });
 			}
